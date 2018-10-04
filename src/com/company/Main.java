@@ -8,6 +8,8 @@ import java.util.Scanner;
 
 public class Main
 {
+
+    // new version
     private static final String MESSAGE_ADDED = "Welcome to TaskManager-Level1!";
     private static final String SYSTEM_PROMPT = "Your task?";
     private static final String PRINT_TASK_LIST = "Tasks in the list: ";
