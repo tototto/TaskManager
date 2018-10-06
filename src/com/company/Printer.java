@@ -30,6 +30,11 @@ public class Printer
             else
                 System.out.println("\tDo by: " + NO_DEADLINE);
         }
+
+        if(obj.checkDateNULL())
+        {
+            System.out.println("\tCalendar: " + obj.getDate());
+        }
     }
 
     public static void printExit()

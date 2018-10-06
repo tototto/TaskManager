@@ -4,6 +4,7 @@ import java.io.*;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Main
@@ -25,17 +26,24 @@ public class Main
         Scanner GetString = new Scanner(System.in); // define Scanner object
         ArrayList<task> TaskList = new ArrayList<task>(); // create dynamic array using Collections to store task from user input
         ArrayList<String> TaskFromFile; // Dynamic array to store input from file
+        ArrayList<String> CalendarList;
         FileHelper theFile = new FileHelper(PATH);
+        FileHelper theCalendar = new FileHelper("calendar.txt");
         int index = 0;
+        int indexForCalendar = 0;
         String isDoneForFile = null;
         Printer printer = new Printer();
         errorManager ErrManager = new errorManager();
+        NewCalendar calendar = new NewCalendar();
 
         // Sandbox the following procedure: create file if it does not exist. Open file if exist
         ErrManager.SandBox_CreateOpenFile(theFile);
+        ErrManager.SandBox_CreateOpenFile(theCalendar);
 
         // Sandbox the following procedure: Read from File and store file result as string in TaskFromFile
         TaskFromFile = ErrManager.Sandbox_ReadFile(theFile);
+        CalendarList = ErrManager.Sandbox_ReadFile(theCalendar);
+
 
         while(runner)
 	    {
@@ -43,7 +51,7 @@ public class Main
             String keyword = null;
 	        // loop through the TaskFromFile first, the variable 'input' and 'keyword' will hold everything from TaskFromFile
 	        // use int index to track which row from file you are currently reading from and when to stop
-            if(FinishLoadFromFileStatus(index, TaskFromFile)) // not finish loading from file
+            if(FinishLoadFromFileStatus(index, TaskFromFile)) // not finish loading from file (tasklist.txt)
             {
                 TextManager textManager = new TextManager(TaskFromFile, index);
                 textManager.LoadText();
@@ -52,6 +60,13 @@ public class Main
                 keyword = textManager.getKeyword();
                 isDoneForFile = textManager.getIsDoneForFile();
                 index++;
+            }
+            else if(FinishLoadFromFileStatus(indexForCalendar, CalendarList))
+            {
+                TextManager textManager = new TextManager(CalendarList, indexForCalendar, "calendar");
+                input = TextManager.getInput();
+                keyword = SelectKeyword(input).toLowerCase().trim(); // grab keyword
+                indexForCalendar++;
             }
             else
             {
@@ -77,7 +92,7 @@ public class Main
 
                         try
                         {
-                                if (Integer.parseInt(Array[1]) > 0 && TaskList.size() > 0)  // a valid index is selected to be updated
+                                if (checkValidIndex(Array[1], TaskList))  // a valid index is selected to be updated
                                 {
                                     // grab task to be updated
                                     task taskToBeUpdated = null;
@@ -90,7 +105,6 @@ public class Main
                                         System.out.println("Please list a valid index to update");
 
                                     System.out.println("Updated index " + Integer.parseInt(Array[1]));
-
 
                                     // check if task in a Todo or a Deadline obj
                                     if (taskToBeUpdated instanceof deadline) {
@@ -148,16 +162,38 @@ public class Main
                         }
                         else { System.out.println("Please list a valid index to delete");}
                     }
+                    else if(keyword.equals("add")) // add dates to calendar
+                    {
+                        String[] Array = input.split(" ");
+
+                        try {
+                            if (checkValidIndex(Array[1], TaskList)) {
+                                // grab task to be updated
+                                task taskToBeUpdated = null;
+
+                                if (Integer.parseInt(Array[1]) - 1 < Array.length) {
+                                    taskToBeUpdated = TaskList.get(Integer.parseInt(Array[1]) - 1);
+                                    taskToBeUpdated.putDate(Array[2], Array[3], Array[4]);
+                                    System.out.println("Added to Calendar");
+                                } else
+                                    System.out.println("Please list a valid index to Add dates");
+
+                            }
+
+                        }catch (ArrayIndexOutOfBoundsException e) { System.out.println("follow the following format: [DATE 1] to [DATE 2]");}
+                        catch (NumberFormatException e) {System.out.println("Please enter a valid index");}
+                    }
 
                     // perform file writting operation
                     isDoneForFile = theFile.load_isDone_For_File(isDoneForFile, TaskList, index);
 
-                    System.out.println(PRINT_TASK_LIST + TaskList.size());
+                        System.out.println(PRINT_TASK_LIST + TaskList.size());
 
                     if(!FinishLoadFromFileStatus(index, TaskFromFile)) // if finish loading from file
                     {
                         // Sandbox the following procedure:
                         int SucessStatus = ErrManager.SandBox_WriteToFile(theFile, TaskList); // determine if write is sucessful
+                            SucessStatus = ErrManager.SandBox_WriteToCalendar(theCalendar, TaskList); // determine if write is sucessful
 
                         if(SucessStatus == 1) { return; } //exit main if write to file fail
                     }
@@ -175,7 +211,6 @@ public class Main
                 else if(keyword.equals("view"))
                 {
                     System.out.println("Generating Calender...");
-                    NewCalendar calendar = new NewCalendar();
                     calendar.GenerateCalendar();
                 }
 
@@ -222,6 +257,11 @@ public class Main
         input = input.substring(StartPoint, input.length()); // remove the add from user input
 
         return input;
+    }
+
+    public static boolean checkValidIndex(String index, ArrayList<task> TaskList)
+    {
+        return  Integer.parseInt(index) > 0 && TaskList.size() > 0;
     }
 
     public static boolean check_keyword(String keyword)

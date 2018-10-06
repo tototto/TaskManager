@@ -48,6 +48,19 @@ public class errorManager
         return 0;
     }
 
+    public int SandBox_WriteToCalendar(FileHelper theCalendar, ArrayList<task> TaskList)
+    {
+        try
+        {
+            theCalendar.Write_to_Calendar(TaskList);
+        } catch (IOException e)
+        {
+            return 1; // return 1 to exit main if write to file fail
+        }
+
+        return 0;
+    }
+
     public static boolean errorHandling(String input)
     {
         if(check_empty_string(input))

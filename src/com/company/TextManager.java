@@ -8,6 +8,7 @@ public class TextManager
    private static String input;
    private static String keyword;
    private static String isDoneForFile;
+   private static String calendar;
 
    public TextManager(ArrayList<String> TaskFromFile, int index)
    {
@@ -15,6 +16,12 @@ public class TextManager
        keyword = SelectKeywordFromFile(input).toLowerCase().trim(); // grab keyword from each sentence
        isDoneForFile = grabIsDone(input);// grab isDone details
    }
+
+   public TextManager(ArrayList<String> CalendarFromFile, int index, String Calendar)
+   {
+       input = CalendarFromFile.get(index);
+   }
+
 
    public static String getInput()
    {
@@ -84,5 +91,10 @@ public class TextManager
         }
 
         return input;
+    }
+
+    public static String getCalendar()
+    {
+        return calendar;
     }
 }

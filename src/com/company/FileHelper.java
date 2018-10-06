@@ -66,7 +66,7 @@ public class FileHelper {
 
             if(obj instanceof deadline)
             {
-                fw.write("[" + (i + 1) + "] | " + obj.getClass().getSimpleName() + " | " + obj.getDesciption().trim() + " | " + obj.getDo_by() + " | " + obj.getDone());
+                fw.write("[" + (i + 1) + "] | " + obj.getClass().getSimpleName() + " | " + obj.getDesciption().trim() + " | " + obj.getDo_by() + " | " + obj.getDone() );
                 fw.write( System.lineSeparator());
             }
             else
@@ -110,4 +110,21 @@ public class FileHelper {
     }
 
 
+    public void Write_to_Calendar(ArrayList<task> taskList) throws IOException {
+        // OPEN FILE IN WRITE MODE
+        FileWriter fw = Enable_Write_Mode(theFile);
+
+        // PERFORM WRITING
+        for(int i = 0; i < taskList.size(); i++)
+        {
+            task obj = taskList.get(i);
+
+            if(obj.checkDateNULL()) {
+                fw.write("add " + (i+1) + " "+ obj.getDate());
+                fw.write(System.lineSeparator());
+            }
+        }
+
+        closeFile(fw);
+    }
 }
