@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.text.DateFormat;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 public class Main
 {
@@ -173,7 +176,24 @@ public class Main
 
                                 if (Integer.parseInt(Array[1]) - 1 < Array.length) {
                                     taskToBeUpdated = TaskList.get(Integer.parseInt(Array[1]) - 1);
-                                    taskToBeUpdated.putDate(Array[2], Array[3], Array[4]);
+                                    DateFormat df = new SimpleDateFormat("dd/mm/yyyy");
+
+                                    try
+                                    {
+                                        // check if it is in date format
+                                        df.parse(Array[2]);
+                                        df.parse(Array[4]);
+
+                                        if(Array[3].equals("to"))
+                                            taskToBeUpdated.putDate(Array[2], Array[3], Array[4]); // add it in
+                                        else
+                                            throw new Exception();
+                                    }
+                                    catch(Exception e)
+                                    {
+                                        System.out.println("Please enter a valid date");
+                                    }
+
                                     System.out.println("Added to Calendar");
                                 } else
                                     System.out.println("Please list a valid index to Add dates");
@@ -211,7 +231,7 @@ public class Main
                 else if(keyword.equals("view"))
                 {
                     System.out.println("Generating Calender...");
-                    calendar.GenerateCalendar();
+                    calendar.GenerateCalendar(TaskList);
                 }
 
             }

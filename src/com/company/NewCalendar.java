@@ -1,6 +1,9 @@
 package com.company;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 public class NewCalendar
 {
@@ -31,7 +34,7 @@ public class NewCalendar
         return ((CurrentMonth - 6) % 12) ;
     }
 
-    public void GenerateCalendar()
+    public void GenerateCalendar(ArrayList<task> TaskList)
     {
         int year = TheYearSixMonthAgo();
         int month = TheMonthSixMonthsAgo();
@@ -40,13 +43,13 @@ public class NewCalendar
 
         for(int i = 0; i < 12; i++)
         {
-            DisplayCalendar(month+1, year);
+            DisplayCalendar(month+1, year, TaskList);
             month = (++month) % 12;
             if(month == 0) year++;
         }
     }
 
-    public void DisplayCalendar(int monthInput, int yearInput)
+    public void DisplayCalendar(int monthInput, int yearInput, ArrayList<task> TaskList)
     {
         int month = monthInput;    // month (Jan = 1, Dec = 12)
         int year = yearInput;     // year
@@ -80,7 +83,10 @@ public class NewCalendar
 
         for (int i = 1; i <= days[month]; i++) // i is the individual date of the month
         {
-            System.out.printf("%2d ", i);
+            if(DateIsBooked(i,month,year, TaskList))
+                System.out.printf(".X ");
+            else
+                System.out.printf("%2d ", i);
 
             if (((i + d) % 7 == 0) || (i == days[month]))
                 System.out.println();
@@ -89,6 +95,32 @@ public class NewCalendar
 
     }
 
+    private boolean DateIsBooked(int day, int month, int year, ArrayList<task> taskList)
+    {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+        try {
+            Date DateToCheck = dateFormat.parse(day + "/" + month + "/" + year);
+
+            for (task x : taskList) {
+                String TaskDate = x.getDate();
+                String[] Array = TaskDate.split(" ");
+                String StartDate = Array[0];
+                String EndDate = Array[2];
+
+                Date Start = dateFormat.parse(StartDate);
+                Date End = dateFormat.parse(EndDate);
+
+                return isWithinRange(Start, End, DateToCheck, dateFormat);
+            }
+        } catch (Exception e) { System.out.println("fail");}
+        return false;
+    }
+
+    boolean isWithinRange(Date startDate, Date endDate, Date testDate, SimpleDateFormat dateFormat)
+    {
+        return testDate.after(startDate) && testDate.before(endDate) || (dateFormat.format(testDate).equals(dateFormat.format(startDate)) || dateFormat.format(testDate).equals(dateFormat.format(endDate)) );
+    }
     /***************************************************************************
      *  Given the month, day, and year, return which day
      *  of the week it falls on according to the Gregorian calendar.
