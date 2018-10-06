@@ -15,9 +15,7 @@ public class Main
     private static final String MESSAGE_ADDED = "Welcome to TaskManager-Level1!";
     private static final String SYSTEM_PROMPT = "Your task?";
     private static final String PRINT_TASK_LIST = "Tasks in the list: ";
-
     private static final String ERROR_ON_OPEN_CREATE = "Error: Cannot create or open file";
-
     private static final String ERROR_ON_CLOSE_FILE = "Error: Cannot close file. Changes may not be saved";
     private static final String PATH = "tasklist.txt";
 
@@ -91,123 +89,33 @@ public class Main
 
                     if(keyword.equals("update"))
                     {
-                        String[] Array = input.split(" ");
-
-                        try
-                        {
-                                if (checkValidIndex(Array[1], TaskList))  // a valid index is selected to be updated
-                                {
-                                    // grab task to be updated
-                                    task taskToBeUpdated = null;
-
-                                    if (Integer.parseInt(Array[1]) - 1 <= Array.length) {
-                                        taskToBeUpdated = TaskList.get(Integer.parseInt(Array[1]) - 1);
-                                        // get details for update
-                                        input = TextManager.Textparser(input);
-                                    } else
-                                        System.out.println("Please list a valid index to update");
-
-                                    System.out.println("Updated index " + Integer.parseInt(Array[1]));
-
-                                    // check if task in a Todo or a Deadline obj
-                                    if (taskToBeUpdated instanceof deadline) {
-                                        String desc = returnDescriptionOfDeadline(input);
-                                        String do_by = returnDoByofDeadline(input);
-                                        taskToBeUpdated.updateisDone(Array[Array.length - 1]);
-                                        ((deadline) taskToBeUpdated).updateDo_by(do_by);
-                                        taskToBeUpdated.updateDescription(desc);
-                                    } else if (taskToBeUpdated instanceof todo) {
-                                        taskToBeUpdated.updateDescription(input);
-                                        taskToBeUpdated.updateisDone(Array[Array.length - 1]);
-                                    }
-                                }
-
-                        }catch (NumberFormatException e) // catch if user did not enter a valid index
-                        {
-                            System.out.println("Please list a valid index to update");
-                            System.out.println("How to update DEADLINE: [UPDATE] [IDX] [DESCRIPTION] /BY [DEADLINE] [DONE_STATUS] ");
-                            System.out.println("How to update TODO: [UPDATE] [IDX] [DESCRIPTION] [DONE_STATUS] ");
-                        }
-
+                        updater(TaskList, input);
                     }
                     else if(keyword.equals("todo"))
                     {
-                        TaskList.add(new todo(input)); // add To.do to the list of task
+                        AddTodo(TaskList, input);
                     }
                     else if( keyword.equals("deadline") )
                     {
-                        try
-                        {
-                            String desc = returnDescriptionOfDeadline(input);
-                            String do_by = returnDoByofDeadline(input);
-                            deadline deadlines = new deadline(desc, do_by); // create deadline object
-                            TaskList.add(deadlines); // add deadline object
-                        }
-                        catch (StringIndexOutOfBoundsException e)
-                        {
-                            System.out.println("Enter a valid Deadline task ");
-                        }
+                        AddDeadline(TaskList, input);
                     }
                     else if(keyword.equals("done") )
                     {
-                        int Doneindex = Integer.parseInt(input.trim()) - 1;
-                        TaskList.get(Doneindex).SetAsDone(true);
+                        setToDone(TaskList, input);
                     }
                     else if(keyword.equals("delete"))
                     {
-                        String[] Array = input.split(" ");
-
-                        if(Array[1].equals("all")) { TaskList.clear(); }
-                        else if ( Integer.parseInt(Array[1]) >  0 && TaskList.size() > 0)  // a valid index is selected to be deleted
-                        {
-                            TaskList.remove(Integer.parseInt(Array[1])-1);
-                            System.out.println("Deleted index " + Integer.parseInt(Array[1]));
-                        }
-                        else { System.out.println("Please list a valid index to delete");}
+                        deleteTask(TaskList, input);
                     }
                     else if(keyword.equals("add")) // add dates to calendar
                     {
-                        String[] Array = input.split(" ");
-
-                        try {
-                            if (checkValidIndex(Array[1], TaskList)) {
-                                // grab task to be updated
-                                task taskToBeUpdated = null;
-
-                                if (Integer.parseInt(Array[1]) - 1 < Array.length) {
-                                    taskToBeUpdated = TaskList.get(Integer.parseInt(Array[1]) - 1);
-                                    DateFormat df = new SimpleDateFormat("dd/mm/yyyy");
-
-                                    try
-                                    {
-                                        // check if it is in date format
-                                        df.parse(Array[2]);
-                                        df.parse(Array[4]);
-
-                                        if(Array[3].equals("to"))
-                                            taskToBeUpdated.putDate(Array[2], Array[3], Array[4]); // add it in
-                                        else
-                                            throw new Exception();
-                                    }
-                                    catch(Exception e)
-                                    {
-                                        System.out.println("Please enter a valid date");
-                                    }
-
-                                    System.out.println("Added to Calendar");
-                                } else
-                                    System.out.println("Please list a valid index to Add dates");
-
-                            }
-
-                        }catch (ArrayIndexOutOfBoundsException e) { System.out.println("follow the following format: [DATE 1] to [DATE 2]");}
-                        catch (NumberFormatException e) {System.out.println("Please enter a valid index");}
+                        AddToCalendar(TaskList, input);
                     }
 
                     // perform file writting operation
                     isDoneForFile = theFile.load_isDone_For_File(isDoneForFile, TaskList, index);
 
-                        System.out.println(PRINT_TASK_LIST + TaskList.size());
+                    System.out.println(PRINT_TASK_LIST + TaskList.size());
 
                     if(!FinishLoadFromFileStatus(index, TaskFromFile)) // if finish loading from file
                     {
@@ -230,7 +138,6 @@ public class Main
                 }
                 else if(keyword.equals("view"))
                 {
-                    System.out.println("Generating Calender...");
                     calendar.GenerateCalendar(TaskList);
                 }
 
@@ -239,6 +146,119 @@ public class Main
             {
                 Printer.printError();
             }
+        }
+    }
+
+    private static void AddTodo(ArrayList<task> taskList, String input) {
+        taskList.add(new todo(input)); // add To.do to the list of task
+    }
+
+    private static void AddDeadline(ArrayList<task> taskList, String input) {
+        try
+        {
+            String desc = returnDescriptionOfDeadline(input);
+            String do_by = returnDoByofDeadline(input);
+            deadline deadlines = new deadline(desc, do_by); // create deadline object
+            taskList.add(deadlines); // add deadline object
+        }
+        catch (StringIndexOutOfBoundsException e)
+        {
+            System.out.println("Enter a valid Deadline task ");
+        }
+    }
+
+    private static void setToDone(ArrayList<task> taskList, String input) {
+        int Doneindex = Integer.parseInt(input.trim()) - 1;
+        taskList.get(Doneindex).SetAsDone(true);
+    }
+
+    private static void deleteTask(ArrayList<task> taskList, String input) {
+        String[] Array = input.split(" ");
+
+        if(Array[1].equals("all")) { taskList.clear(); }
+        else if ( Integer.parseInt(Array[1]) >  0 && taskList.size() > 0)  // a valid index is selected to be deleted
+        {
+            taskList.remove(Integer.parseInt(Array[1])-1);
+            System.out.println("Deleted index " + Integer.parseInt(Array[1]));
+        }
+        else { System.out.println("Please list a valid index to delete");}
+    }
+
+    private static void AddToCalendar(ArrayList<task> taskList, String input) {
+        String[] Array = input.split(" ");
+
+        try {
+            if (checkValidIndex(Array[1], taskList)) {
+                // grab task to be updated
+                task taskToBeUpdated = null;
+
+                if (Integer.parseInt(Array[1]) - 1 < Array.length) {
+                    taskToBeUpdated = taskList.get(Integer.parseInt(Array[1]) - 1);
+                    DateFormat df = new SimpleDateFormat("dd/mm/yyyy");
+
+                    try
+                    {
+                        // check if it is in date format
+                        df.parse(Array[2]);
+                        df.parse(Array[4]);
+
+                        if(Array[3].equals("to"))
+                            taskToBeUpdated.putDate(Array[2], Array[3], Array[4]); // add it in
+                        else
+                            throw new Exception();
+                    }
+                    catch(Exception e)
+                    {
+                        System.out.println("Please enter a valid date");
+                    }
+
+                    System.out.println("Added to Calendar");
+                } else
+                    System.out.println("Please list a valid index to Add dates");
+
+            }
+
+        }catch (ArrayIndexOutOfBoundsException e) { System.out.println("follow the following format: [DATE 1] to [DATE 2]");}
+        catch (NumberFormatException e) {System.out.println("Please enter a valid index");}
+    }
+
+    private static void updater(ArrayList<task> taskList, String input) {
+        String[] Array = input.split(" ");
+
+        try
+        {
+                if (checkValidIndex(Array[1], taskList))  // a valid index is selected to be updated
+                {
+                    // grab task to be updated
+                    task taskToBeUpdated = null;
+
+                    if (Integer.parseInt(Array[1]) - 1 <= Array.length) {
+                        taskToBeUpdated = taskList.get(Integer.parseInt(Array[1]) - 1);
+                        // get details for update
+                        input = TextManager.Textparser(input);
+                    } else
+                        System.out.println("Please list a valid index to update");
+
+                    System.out.println("Updated index " + Integer.parseInt(Array[1]));
+
+                    // check if task in a Todo or a Deadline obj
+                    if (taskToBeUpdated instanceof deadline) {
+                        String desc = returnDescriptionOfDeadline(input);
+                        String do_by = returnDoByofDeadline(input);
+                        taskToBeUpdated.updateisDone(Array[Array.length - 1]);
+                        ((deadline) taskToBeUpdated).updateDo_by(do_by);
+                        taskToBeUpdated.updateDescription(desc);
+                    } else if (taskToBeUpdated instanceof todo) {
+                        taskToBeUpdated.updateDescription(input);
+                        taskToBeUpdated.updateisDone(Array[Array.length - 1]);
+                    }
+                }
+
+        }catch (NumberFormatException e) // catch if user did not enter a valid index
+        {
+            System.out.println("Please list a valid index to update");
+            System.out.println("How to update DEADLINE: [UPDATE] [IDX] [DESCRIPTION] /BY [DEADLINE] [DONE_STATUS] ");
+            System.out.println("How to update TODO: [UPDATE] [IDX] [DESCRIPTION] [DONE_STATUS] ");
         }
     }
 

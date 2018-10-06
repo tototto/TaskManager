@@ -36,6 +36,8 @@ public class NewCalendar
 
     public void GenerateCalendar(ArrayList<task> TaskList)
     {
+        System.out.println("Generating Calender...");
+
         int year = TheYearSixMonthAgo();
         int month = TheMonthSixMonthsAgo();
 
@@ -98,6 +100,7 @@ public class NewCalendar
     private boolean DateIsBooked(int day, int month, int year, ArrayList<task> taskList)
     {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        boolean AnyoneMatches = false;
 
         try {
             Date DateToCheck = dateFormat.parse(day + "/" + month + "/" + year);
@@ -111,9 +114,14 @@ public class NewCalendar
                 Date Start = dateFormat.parse(StartDate);
                 Date End = dateFormat.parse(EndDate);
 
-                return isWithinRange(Start, End, DateToCheck, dateFormat);
+                if(!AnyoneMatches)
+                    AnyoneMatches = isWithinRange(Start, End, DateToCheck, dateFormat);
             }
         } catch (Exception e) { System.out.println("fail");}
+
+        if(AnyoneMatches)
+            return true;
+
         return false;
     }
 
