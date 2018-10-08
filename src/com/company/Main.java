@@ -65,7 +65,7 @@ public class Main
             else if(FinishLoadFromFileStatus(indexForCalendar, CalendarList))
             {
                 TextManager textManager = new TextManager(CalendarList, indexForCalendar, "calendar");
-                input = TextManager.getInput();
+                input = TextManager.getCalendarInput();
                 keyword = SelectKeyword(input).toLowerCase().trim(); // grab keyword
                 indexForCalendar++;
             }
@@ -232,7 +232,7 @@ public class Main
                     // grab task to be updated
                     task taskToBeUpdated = null;
 
-                    if (Integer.parseInt(Array[1]) - 1 <= Array.length) {
+                    if (Integer.parseInt(Array[1]) - 1 < Array.length) {
                         taskToBeUpdated = taskList.get(Integer.parseInt(Array[1]) - 1);
                         // get details for update
                         input = TextManager.Textparser(input);

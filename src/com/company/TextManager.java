@@ -25,8 +25,13 @@ public class TextManager
 
    public static String getInput()
    {
-       return input;
+       return input.substring(0, input.lastIndexOf(" "));
    }
+
+    public static String getCalendarInput()
+    {
+        return input;
+    }
 
    public String getKeyword()
    {
@@ -40,8 +45,9 @@ public class TextManager
 
    public void LoadText()
    {
+       int indxOfDeadline = Finding_Nth_occurrence(input, "|", 3);
+       input = ParseWord(input, keyword, indxOfDeadline); // check if the task is a Deadline task and format it accordingly
        input = ConvertToNormal(input).trim(); // convert to a normal string
-       input = ParseWord(input, keyword); // check if the task is a Deadline task and format it accordingly
    }
 
     public static String SelectKeywordFromFile(String input)
@@ -78,15 +84,15 @@ public class TextManager
     public static String Textparser(String input)// just to remove the first 2 and return rest
     {
         int indx = input.indexOf(" ", input.indexOf(" ")+1 );
-        return input.substring(indx, input.lastIndexOf(" "));
+        return input.substring(indx, input.length());
     }
 
-    private static String ParseWord(String input, String keyword)
+    private static String ParseWord(String input, String keyword, int indxOfDeadline)
     {
         if(keyword.equals("deadline"))
         {
             StringBuffer sb = new StringBuffer(input);
-            sb.insert(input.lastIndexOf("   "), " /by");
+            sb.insert(indxOfDeadline, " /by ");
             input = sb.toString();
         }
 
@@ -96,5 +102,12 @@ public class TextManager
     public static String getCalendar()
     {
         return calendar;
+    }
+
+    public static int Finding_Nth_occurrence(String str, String substr, int n) {
+        int pos = str.indexOf(substr);
+        while (--n > 0 && pos != -1)
+            pos = str.indexOf(substr, pos + 1);
+        return pos;
     }
 }

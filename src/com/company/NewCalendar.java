@@ -107,6 +107,10 @@ public class NewCalendar
 
             for (task x : taskList) {
                 String TaskDate = x.getDate();
+
+                if(TaskDate == null)
+                    continue;
+
                 String[] Array = TaskDate.split(" ");
                 String StartDate = Array[0];
                 String EndDate = Array[2];
@@ -117,7 +121,7 @@ public class NewCalendar
                 if(!AnyoneMatches)
                     AnyoneMatches = isWithinRange(Start, End, DateToCheck, dateFormat);
             }
-        } catch (Exception e) { System.out.println("fail");}
+        } catch (Exception e) { }
 
         if(AnyoneMatches)
             return true;
