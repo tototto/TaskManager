@@ -11,21 +11,21 @@ public class FileHelper {
 
     private String fileName;
     private File theFile;
-
-    private static final String ERROR_ON_CLOSE_FILE = "Error: Cannot close file. Changes may not be saved";
+    private UserInterface UI;
 
     public FileHelper(String fileName) {
         this.fileName = fileName;
+        UI = new UserInterface();
     }
 
     public void Create_or_Open_File() throws IOException
     {
         File textfile = new File(fileName);
-        System.out.println("Opening and loading Task from file" + fileName);
+        UI.printOpenMsg(fileName);
 
         if(!textfile.exists())
         {
-            System.out.println(fileName + "not found. Creating one in directory now.");
+            System.out.println();
             textfile.createNewFile();
         }
 
@@ -89,7 +89,7 @@ public class FileHelper {
         }
         catch (IOException e)
         {
-            System.out.println(ERROR_ON_CLOSE_FILE);
+            UI.printCloseError();
             e.printStackTrace();
         }
 
@@ -126,5 +126,10 @@ public class FileHelper {
         }
 
         closeFile(fw);
+    }
+
+    public static boolean FinishLoadFromFileStatus(int index, ArrayList<String> TaskFromFile) // return true if not finish loading from file
+    {
+        return index < TaskFromFile.size();
     }
 }

@@ -6,80 +6,36 @@ import java.util.ArrayList;
 
 public class errorManager
 {
-    private static final String ERROR_ON_OPEN_CREATE = "Error: Cannot create or open file";
-    private static final String ERROR_ON_READ_FILE = "Error: Cannot read from file";
+    UserInterface UI;
 
-    public void SandBox_CreateOpenFile(FileHelper theFile)
+    public errorManager()
     {
-        try { theFile.Create_or_Open_File(); }
-        catch (IOException e)
-        {
-            System.out.println(ERROR_ON_OPEN_CREATE);
+        UI = new UserInterface();
+    }
+
+    public void ManageCreateOpenFileError(IOException e)
+    {
+            UI.printOpenError();
             e.printStackTrace();
-            return; //exit main if file cannot be created
-        }
     }
 
-    public ArrayList<String> Sandbox_ReadFile(FileHelper theFile)
+    public void ManageReadFileError(FileNotFoundException e)
     {
-        try
-        {
-            return theFile.readFile();
-        }
-        catch (FileNotFoundException e)
-        {
-            System.out.println(ERROR_ON_READ_FILE);
-            e.printStackTrace();
-        }
-
-        return null;
+        UI.printReadError();
+        e.printStackTrace();
     }
 
-    public int SandBox_WriteToFile(FileHelper theFile, ArrayList<task> TaskList)
+    public void ManageWriteError(IOException e)
     {
-        try
-        {
-            theFile.Write_to_File(TaskList);
-        } catch (IOException e)
-        {
-            return 1; // return 1 to exit main if write to file fail
-        }
-
-        return 0;
+        e.printStackTrace();
     }
 
-    public int SandBox_WriteToCalendar(FileHelper theCalendar, ArrayList<task> TaskList)
+    public boolean check_empty_string(String input, String keyword)
     {
-        try
-        {
-            theCalendar.Write_to_Calendar(TaskList);
-        } catch (IOException e)
-        {
-            return 1; // return 1 to exit main if write to file fail
-        }
-
-        return 0;
-    }
-
-    public static boolean errorHandling(String input)
-    {
-        if(check_empty_string(input))
-        {
-            try { throw new TaskManagerException("missing description"); } // produce exception for missing description
-            catch (TaskManagerException e) // catch error
-            {
-                Printer.printMissingDescrip();
-            }
+        if(input.length() <= 0 && !keyword.equals("help")) {
+            UI.printMissingDescrip();
             return true;
         }
-
-        return false;
-    }
-
-    private static boolean check_empty_string(String input)
-    {
-        if(input.length() <= 0 )
-            return true;
         else
             return false;
     }

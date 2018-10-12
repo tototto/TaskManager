@@ -48,4 +48,10 @@ public class task
     }
 
     public String getDate() { return date; }
+
+    public void setDateToNULL()
+    {
+        date = null;
+    }
+
 }

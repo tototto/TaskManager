@@ -1,9 +1,11 @@
 package com.company;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
 public class NewCalendar
 {
@@ -11,12 +13,14 @@ public class NewCalendar
 
     private int CurrentYear;
     private int CurrentMonth;
+    private UserInterface UI;
 
     public NewCalendar()
     {
         calendar = Calendar.getInstance(); // create calendar obj
         CurrentYear = calendar.get(calendar.YEAR);
         CurrentMonth = calendar.get(calendar.MONTH); // give you current month - 1
+        UI = new UserInterface();
     }
 
     public int TheYearSixMonthAgo()
@@ -36,7 +40,7 @@ public class NewCalendar
 
     public void GenerateCalendar(ArrayList<task> TaskList)
     {
-        System.out.println("Generating Calender...");
+        UI.printGenerateCalendar();
 
         int year = TheYearSixMonthAgo();
         int month = TheMonthSixMonthsAgo();
@@ -86,16 +90,19 @@ public class NewCalendar
         for (int i = 1; i <= days[month]; i++) // i is the individual date of the month
         {
             if(DateIsBooked(i,month,year, TaskList))
-                System.out.printf(".X ");
+                UI.printBookedDay();
             else
-                System.out.printf("%2d ", i);
+                UI.printDay(i);
 
             if (((i + d) % 7 == 0) || (i == days[month]))
                 System.out.println();
         }
+
         System.out.println();
 
     }
+
+
 
     private boolean DateIsBooked(int day, int month, int year, ArrayList<task> taskList)
     {
@@ -120,6 +127,7 @@ public class NewCalendar
 
                 if(!AnyoneMatches)
                     AnyoneMatches = isWithinRange(Start, End, DateToCheck, dateFormat);
+
             }
         } catch (Exception e) { }
 
@@ -139,7 +147,7 @@ public class NewCalendar
      *  For month, use 1 for January, 2 for February, and so forth.
      *  Returns 0 for Sunday, 1 for Monday, and so forth.
      ***************************************************************************/
-    public static int day(int month, int day, int year)
+    public  int day(int month, int day, int year)
     {
         int y = year - (14 - month) / 12;
         int x = y + y/4 - y/100 + y/400;
@@ -149,11 +157,67 @@ public class NewCalendar
     }
 
     // return true if the given year is a leap year
-    public static boolean isLeapYear(int year)
+    public  boolean isLeapYear(int year)
     {
         if  ((year % 4 == 0) && (year % 100 != 0)) return true;
         if  (year % 400 == 0) return true;
         return false;
+    }
+
+    public  void AddToCalendar(ArrayList<task> taskList, String input) {
+        String[] Array = input.split(" ");
+
+        Checker checker = new Checker();
+
+        try {
+            if (checker.checkValidIndex(Array[1], taskList)) {
+                // grab task to be updated
+                task taskToBeUpdated = null;
+
+                if (Integer.parseInt(Array[1]) - 1 < Array.length) {
+                    taskToBeUpdated = taskList.get(Integer.parseInt(Array[1]) - 1);
+                    DateFormat df = new SimpleDateFormat("dd/mm/yyyy");
+
+                    try
+                    {
+                        // check if it is in date format
+                        Date start = DateValidation(Array[2]);
+                        Date end = DateValidation(Array[4]);
+
+                        if(!CheckBeforeAfter(start, end))
+                            throw new Exception();
+
+                        if(Array[3].equals("to"))
+                            taskToBeUpdated.putDate(Array[2], Array[3], Array[4]); // add it in
+                        else
+                            throw new Exception();
+                    }
+                    catch(Exception e)
+                    {
+                        UI.printInValidDayError();
+                    }
+
+                    UI.printCalendarAdded();
+
+                } else
+                    UI.printInValidIndex();
+
+            }
+
+        }catch (ArrayIndexOutOfBoundsException e) { UI.printDateFormatError();}
+        catch (NumberFormatException e) {UI.printInValidIndex();;}
+    }
+
+    private Date DateValidation(String date) throws ParseException {
+            DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+            // Input to be parsed should strictly follow the defined date format
+            // above.
+            format.setLenient(false);
+            return format.parse(date);
+    }
+
+    private boolean CheckBeforeAfter(Date start, Date end) {
+        return end.after(start) && start.before(end);
     }
 
 }

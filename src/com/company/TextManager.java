@@ -25,7 +25,8 @@ public class TextManager
 
    public static String getInput()
    {
-       return input.substring(0, input.lastIndexOf(" "));
+       return input;
+       //return input.substring(0, input.lastIndexOf(" "));
    }
 
     public static String getCalendarInput()
@@ -81,10 +82,10 @@ public class TextManager
         return newString.toString();
     }
 
-    public static String Textparser(String input)// just to remove the first 2 and return rest
+    public static String Textparser(String input) throws StringIndexOutOfBoundsException// just to remove the first 2 and return rest
     {
         int indx = input.indexOf(" ", input.indexOf(" ")+1 );
-        return input.substring(indx, input.length());
+        return input.substring(indx, input.lastIndexOf(" "));
     }
 
     private static String ParseWord(String input, String keyword, int indxOfDeadline)
