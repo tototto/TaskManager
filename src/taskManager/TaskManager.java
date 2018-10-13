@@ -1,6 +1,35 @@
-package com.company;
+package taskManager;
+
+import checker.Checker;
+import frontEnd.UserInterface;
+import frontEnd.errorManager;
+import main.*;
+import task.*;
+import textManager.Parser;
+import textManager.TextManager;
 
 import java.util.ArrayList;
+
+/**
+ * <h1>Task Manager</h1>
+ * Contains Operation to interact with program
+ * current list of task
+ *
+ * Allows for features of TaskManager CLI to operate
+ * 1. Perform Adding of task
+ * 2. Perform removal of task
+ * 3. Perform Searching of task
+ * 4. Perform Update of task - allows different type of update
+ * 5. Display user aid text manual
+ *
+ * Contains set of core logic for which operation to be used
+ * according to different user instructions
+ * <p>
+ *
+ * @author  Tay Jun Wen
+ * @version 1.0
+ * @since   2018-10-12
+ */
 
 public class TaskManager
 {
@@ -25,12 +54,12 @@ public class TaskManager
         }
         catch (StringIndexOutOfBoundsException e)
         {
-            System.out.println("Enter a valid Deadline task ");
+            System.out.println("Enter a valid Deadline taskManager ");
         }
     }
 
     public void AddTodo(ArrayList<task> taskList, String input) {
-        taskList.add(new todo(input)); // add To.do to the list of task
+        taskList.add(new todo(input)); // add To.do to the list of taskManager
     }
 
     public void setToDone(ArrayList<task> taskList, String input) {
@@ -64,20 +93,21 @@ public class TaskManager
         {
             if (checker.checkValidIndex(Array[1], taskList))  // a valid index is selected to be updated
             {
-                // grab task to be updated
+                // grab taskManager to be updated
                 task taskToBeUpdated = null;
 
                 if (Integer.parseInt(Array[1]) - 1 < Array.length) {
                     taskToBeUpdated = taskList.get(Integer.parseInt(Array[1]) - 1);
                     // get details for update
                     input = TextManager.Textparser(input);
-                } else
-                   UI.printInValidIndex();
+                } else {
+                    UI.printInValidIndex();
+                    return;
+                }
 
-                System.out.println("Updated index " + Integer.parseInt(Array[1]));
-
-                // check if task in a Todo or a Deadline obj
+                // check if taskManager in a Todo or a Deadline obj
                 PerformUpdate(input, Array, taskToBeUpdated);
+                System.out.println("Updated index " + Integer.parseInt(Array[1]));
             }
 
         }catch (Exception e) // catch if user did not enter a valid index
@@ -109,6 +139,10 @@ public class TaskManager
         taskToBeUpdated.updateDescription(desc);
     }
 
+    /**
+     * Contains core logic on the operation to perform
+     * This is based on user inputted keyword
+    */
     public boolean ExecuteTaskCommand(ArrayList<task> taskList, String input, String keyword) {
         errorManager ErrManager = new errorManager();
         NewCalendar calendar = new NewCalendar();;
@@ -161,39 +195,30 @@ public class TaskManager
     private void SearchTaskByType(ArrayList<task> taskList, String input)
     {
         String type = input.trim();
-        deadline Deadline = new deadline("sample", "sample"); // create sample deadline obj
-        todo TODO = new todo("sample");// create sample todo obj
-        int indx = 0;
-        boolean isEmpty = true;
+                deadline Deadline = new deadline("sample", "sample"); // create sample deadline obj
+                todo TODO = new todo("sample");// create sample todo obj
+                int indx = 0;
+                boolean isEmpty = true;
 
-        for(task x : taskList)
-        {
-            if(type.equals("deadline") && x.getClass() == Deadline.getClass())
-            {
-                UI.PrintDetails(x, indx);
-                isEmpty = false;
-            }
-            else if(type.equals("todo") && x.getClass() == TODO.getClass())
-            {
-                UI.PrintDetails(x, indx);
-                isEmpty = false;
-            }
+                for(task x : taskList)
+                {
+                    if(type.equals("deadline") && x.getClass() == Deadline.getClass())
+                    {
+                        UI.PrintDetails(x, indx);
+                        isEmpty = false;
+                    }
+                    else if(type.equals("todo") && x.getClass() == TODO.getClass())
+                    {
+                        UI.PrintDetails(x, indx);
+                        isEmpty = false;
+                    }
 
-            indx++;
-        }
+                    indx++;
+                }
 
         if(isEmpty)
             UI.printNoMatch();
 
     }
 
-    public static class Main
-    {
-        public static void main(String[] args)
-        {
-            Engine TaskManagerProgram = new Engine();
-            TaskManagerProgram.run();
-        }
-
-    }
 }

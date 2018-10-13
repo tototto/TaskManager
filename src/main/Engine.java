@@ -1,11 +1,27 @@
-package com.company;
+package main;
+
+import checker.Checker;
+import frontEnd.UserInterface;
+import frontEnd.errorManager;
+import task.task;
+import taskManager.*;
+import textManager.*;
+import textManager.TextManager;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * Represents The core logic of the TaskManager program.
+ * This can be classified as the main body.
+ */
+
 public class Engine
 {
+    /**
+     * The Other classes used in the operation of TaskManager core logic
+     */
      private Parser parser;
      private TaskManager taskmanager;
      private Checker checker;
@@ -14,7 +30,6 @@ public class Engine
      private UserInterface UI;
      private errorManager ErrManager;
      private NewCalendar calendar;
-     private TaskList taskList;
 
     int index = 0;
     int indexForCalendar = 0;
@@ -30,26 +45,32 @@ public class Engine
         ErrManager = new errorManager();
         calendar = new NewCalendar();
         UI = new UserInterface();
-        taskList = new TaskList();
     }
 
+    /**
+     * Provides for the running of the Task Manager program
+     * Enables the storing of user input Task into program memory
+     * provides provision for the different operation that can be performed using other classes
+     */
     public void run()
     {
         UI.printMessageAdded();
 
         boolean runner = true; // To determine if program should continue
 
-        // Sandbox the following procedure: create file if it does not exist. Open file if exist
+        // create file if it does not exist. Open file if exist
+        /** @throws e if file cannot created or opened */
         try{
             theFile.Create_or_Open_File();
             theCalendar.Create_or_Open_File();
         }catch(IOException e){ErrManager.ManageCreateOpenFileError(e);}
 
         // Sandbox the following procedure: Read from File and store file result as string in TaskFromFile
-        ArrayList<task> TaskList = new ArrayList<task>(); // create dynamic array using Collections to store task from user input
+        ArrayList<task> TaskList = new ArrayList<task>(); // create dynamic array using Collections to store taskManager from user input
         ArrayList<String> TaskFromFile = null;
         ArrayList<String> CalendarList = null;
 
+        /** @throws e if file cannot be read */
         try {
             TaskFromFile = theFile.readFile();
             CalendarList = theCalendar.readFile();
@@ -66,7 +87,7 @@ public class Engine
                 TextManager textManager = new TextManager(TaskFromFile, index);
                 textManager.LoadText();
 
-                input = TextManager.getInput();
+                input = textManager.getInput();
                 keyword = textManager.getKeyword();
                 isDoneForFile = textManager.getIsDoneForFile();
                 index++;
@@ -74,7 +95,7 @@ public class Engine
             else if(theFile.FinishLoadFromFileStatus(indexForCalendar, CalendarList))
             {
                 TextManager textManager = new TextManager(CalendarList, indexForCalendar, "calendar");
-                input = TextManager.getCalendarInput();
+                input = textManager.getCalendarInput();
                 keyword = parser.SelectKeyword(input).toLowerCase().trim(); // grab keyword
                 indexForCalendar++;
             }

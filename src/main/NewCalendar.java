@@ -1,4 +1,8 @@
-package com.company;
+package main;
+
+import checker.Checker;
+import frontEnd.UserInterface;
+import task.task;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -7,9 +11,19 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
+/**
+ * help to produce calendar
+ * Calculate the time period for calendar to show
+ * Generate and display the calendar
+ *
+ *  * @author  Tay Jun Wen
+ *  * @version 1.0
+ *  * @since   2018-10-12
+ */
+
 public class NewCalendar
 {
-    Calendar calendar;
+    private Calendar calendar;
 
     private int CurrentYear;
     private int CurrentMonth;
@@ -23,7 +37,12 @@ public class NewCalendar
         UI = new UserInterface();
     }
 
-    public int TheYearSixMonthAgo()
+    /***************************************************************************
+     *  Given the month, day, and year, of today
+     *  Calculate the months 6 months before and after today
+     *  Show to facillitate tracking of task in 1 year
+     ***************************************************************************/
+    private int TheYearSixMonthAgo()
     {
         int SixMonthBefore = TheMonthSixMonthsAgo();
 
@@ -33,7 +52,7 @@ public class NewCalendar
         return CurrentYear;
     }
 
-    public int TheMonthSixMonthsAgo()
+    private int TheMonthSixMonthsAgo()
     {
         return ((CurrentMonth - 6) % 12) ;
     }
@@ -55,7 +74,7 @@ public class NewCalendar
         }
     }
 
-    public void DisplayCalendar(int monthInput, int yearInput, ArrayList<task> TaskList)
+    private void DisplayCalendar(int monthInput, int yearInput, ArrayList<task> TaskList)
     {
         int month = monthInput;    // month (Jan = 1, Dec = 12)
         int year = yearInput;     // year
@@ -102,7 +121,9 @@ public class NewCalendar
 
     }
 
-
+    /***************************************************************************
+     *  Given the month, day, and year, return if day is booked
+     ***************************************************************************/
 
     private boolean DateIsBooked(int day, int month, int year, ArrayList<task> taskList)
     {
@@ -137,7 +158,7 @@ public class NewCalendar
         return false;
     }
 
-    boolean isWithinRange(Date startDate, Date endDate, Date testDate, SimpleDateFormat dateFormat)
+    private boolean isWithinRange(Date startDate, Date endDate, Date testDate, SimpleDateFormat dateFormat)
     {
         return testDate.after(startDate) && testDate.before(endDate) || (dateFormat.format(testDate).equals(dateFormat.format(startDate)) || dateFormat.format(testDate).equals(dateFormat.format(endDate)) );
     }
@@ -147,7 +168,7 @@ public class NewCalendar
      *  For month, use 1 for January, 2 for February, and so forth.
      *  Returns 0 for Sunday, 1 for Monday, and so forth.
      ***************************************************************************/
-    public  int day(int month, int day, int year)
+    private  int day(int month, int day, int year)
     {
         int y = year - (14 - month) / 12;
         int x = y + y/4 - y/100 + y/400;
@@ -157,21 +178,21 @@ public class NewCalendar
     }
 
     // return true if the given year is a leap year
-    public  boolean isLeapYear(int year)
+    private  boolean isLeapYear(int year)
     {
         if  ((year % 4 == 0) && (year % 100 != 0)) return true;
         if  (year % 400 == 0) return true;
         return false;
     }
 
-    public  void AddToCalendar(ArrayList<task> taskList, String input) {
+    public void AddToCalendar(ArrayList<task> taskList, String input) {
         String[] Array = input.split(" ");
 
         Checker checker = new Checker();
 
         try {
             if (checker.checkValidIndex(Array[1], taskList)) {
-                // grab task to be updated
+                // grab taskManager to be updated
                 task taskToBeUpdated = null;
 
                 if (Integer.parseInt(Array[1]) - 1 < Array.length) {
@@ -217,7 +238,8 @@ public class NewCalendar
     }
 
     private boolean CheckBeforeAfter(Date start, Date end) {
-        return end.after(start) && start.before(end);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        return end.after(start) && start.before(end) || (dateFormat.format(start).equals(dateFormat.format(end)));
     }
 
 }

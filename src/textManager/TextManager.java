@@ -1,14 +1,27 @@
-package com.company;
+package textManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * <h1>Text Manager</h1>
+ * Manages all the operation pertaining to text handling
+ * that CLI program accepts
+ * contains list of crucial operation
+ * <p>
+ *
+ * @author  Tay Jun Wen
+ * @version 1.0
+ * @since   2018-10-12
+ */
+
+
 public class TextManager
 {
-   private static String input;
-   private static String keyword;
-   private static String isDoneForFile;
-   private static String calendar;
+   private  String input;
+   private  String keyword;
+   private  String isDoneForFile;
+   private  String calendar;
 
    public TextManager(ArrayList<String> TaskFromFile, int index)
    {
@@ -23,13 +36,13 @@ public class TextManager
    }
 
 
-   public static String getInput()
+   public String getInput()
    {
        return input;
        //return input.substring(0, input.lastIndexOf(" "));
    }
 
-    public static String getCalendarInput()
+    public String getCalendarInput()
     {
         return input;
     }
@@ -47,11 +60,11 @@ public class TextManager
    public void LoadText()
    {
        int indxOfDeadline = Finding_Nth_occurrence(input, "|", 3);
-       input = ParseWord(input, keyword, indxOfDeadline); // check if the task is a Deadline task and format it accordingly
+       input = ParseWord(input, keyword, indxOfDeadline); // check if the taskManager is a Deadline taskManager and format it accordingly
        input = ConvertToNormal(input).trim(); // convert to a normal string
    }
 
-    public static String SelectKeywordFromFile(String input)
+    public String SelectKeywordFromFile(String input)
     {
         String[] array = input.split("\\|"); // split user input into array
         String keyword = array[1]; // grab keyword
@@ -63,14 +76,6 @@ public class TextManager
         return input.substring(input.lastIndexOf(" ")+1);
     }
 
-    public String ConvertToNormal(String input)  // convert input string seperated by | delimeter into string seperated by ' ' spaces
-    {
-        String[] Array = input.split("\\|");
-
-        input = ArraysToString(Array);
-        input = Textparser(input);
-        return input;
-    }
 
     private String ArraysToString(String[] Array)
     {
@@ -82,13 +87,25 @@ public class TextManager
         return newString.toString();
     }
 
+    public  String getCalendar()
+    {
+        return calendar;
+    }
+
+    private  int Finding_Nth_occurrence(String str, String substr, int n) {
+        int pos = str.indexOf(substr);
+        while (--n > 0 && pos != -1)
+            pos = str.indexOf(substr, pos + 1);
+        return pos;
+    }
+
     public static String Textparser(String input) throws StringIndexOutOfBoundsException// just to remove the first 2 and return rest
     {
         int indx = input.indexOf(" ", input.indexOf(" ")+1 );
         return input.substring(indx, input.lastIndexOf(" "));
     }
 
-    private static String ParseWord(String input, String keyword, int indxOfDeadline)
+    private  String ParseWord(String input, String keyword, int indxOfDeadline)
     {
         if(keyword.equals("deadline"))
         {
@@ -100,15 +117,14 @@ public class TextManager
         return input;
     }
 
-    public static String getCalendar()
+    public String ConvertToNormal(String input)  // convert input string seperated by | delimeter into string seperated by ' ' spaces
     {
-        return calendar;
+        String[] Array = input.split("\\|");
+
+        input = ArraysToString(Array);
+        input = Textparser(input);
+        return input;
     }
 
-    public static int Finding_Nth_occurrence(String str, String substr, int n) {
-        int pos = str.indexOf(substr);
-        while (--n > 0 && pos != -1)
-            pos = str.indexOf(substr, pos + 1);
-        return pos;
-    }
+
 }

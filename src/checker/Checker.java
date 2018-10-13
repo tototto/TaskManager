@@ -1,6 +1,21 @@
-package com.company;
+package checker;
+
+import checker.inputKeyword;
+import task.task;
 
 import java.util.ArrayList;
+
+/**
+ * <h1>Checker</h1>
+ * Checks if user entered a valid keyword
+ * Ensures that
+ * <p>
+ *
+ * @author  Tay Jun Wen
+ * @version 1.0
+ * @since   2018-10-12
+ */
+
 
 public class Checker {
 
@@ -9,10 +24,15 @@ public class Checker {
         return  Integer.parseInt(index) > 0 && TaskList.size() > 0;
     }
 
+    /** @param keyword check if keyword is valid
+     *  @return determines validity
+     *  Applicable to both functions below
+     */
+
     public static boolean check_keyword(String keyword)
     {
-        TaskList.inputKeyword key;
-        try{ key = TaskList.inputKeyword.valueOf(keyword);}
+        inputKeyword key;
+        try{ key = inputKeyword.valueOf(keyword);}
         catch (Exception e) { return false; };
 
         switch(key)
@@ -35,8 +55,8 @@ public class Checker {
 
     public static boolean CheckValidInput(String keyword)
     {
-        TaskList.inputKeyword key;
-        try{ key = TaskList.inputKeyword.valueOf(keyword);}
+        inputKeyword key;
+        try{ key = inputKeyword.valueOf(keyword);}
         catch (Exception e) { return false; };
 
         switch(key)

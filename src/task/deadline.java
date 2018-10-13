@@ -1,4 +1,4 @@
-package com.company;
+package task;
 
 public class deadline extends todo
 {
@@ -10,6 +10,7 @@ public class deadline extends todo
         this.Do_by = Do_by;
     }
 
+    /** @overwrite Task getDo_by() */
     public String getDo_by()
     {
         return Do_by;

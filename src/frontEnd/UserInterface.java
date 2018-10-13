@@ -1,4 +1,6 @@
-package com.company;
+package frontEnd;
+
+import task.*;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -7,7 +9,7 @@ public class UserInterface
 {
     private Scanner GetString; // define Scanner object
 
-    private  final String SYSTEM_PROMPT = "Your task?";
+    private  final String SYSTEM_PROMPT = "Your taskManager?";
     private  final String MESSAGE_ADDED = "Welcome to TaskManager-Level1!";
     private  final String PRINT_TASK_LIST = "Tasks in the list: ";
     private  final String ERROR_ON_OPEN_CREATE = "Error: Cannot create or open file";
@@ -47,12 +49,12 @@ public class UserInterface
 
     public void printHelp()
     {
-        System.out.println("How to add TODO task: TODO [DESCRIPTION.....]");
-        System.out.println("How to add DEADLINE task: DEADLINE [DESCRIPTION...../by .......]");
-        System.out.println("How to set existing task to Done: DONE [INDX]");
+        System.out.println("How to add TODO taskManager: TODO [DESCRIPTION.....]");
+        System.out.println("How to add DEADLINE taskManager: DEADLINE [DESCRIPTION...../by .......]");
+        System.out.println("How to set existing taskManager to Done: DONE [INDX]");
         System.out.println("How to delete a specific Task by it's index: DELETE [INDX]");
-        System.out.println("How to delete a specific Task by it's index: DELETE all");
-        System.out.println("How to add a specific Task by it's index to the calendar: ADD [INDX] [DATE 1] to [DATE 2]");
+        System.out.println("How to delete all Task: DELETE all");
+        System.out.println("How to add/update a specific Task by it's index to the calendar: ADD [INDX] [DATE 1] to [DATE 2]");
         System.out.println("How to update DEADLINE: UPDATE [IDX] [DESCRIPTION] /BY [DEADLINE] [DONE_STATUS] ");
         System.out.println("How to update TODO: UPDATE [IDX] [DESCRIPTION] [DONE_STATUS] ");
         System.out.println("How to remove an existing date: REMOVE [IDX]");

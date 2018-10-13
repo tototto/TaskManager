@@ -1,4 +1,7 @@
-package com.company;
+package main;
+
+import frontEnd.UserInterface;
+import task.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -6,6 +9,19 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+/**
+ * help to load Tasks from the hard disk and
+ * save tasks to the hard disk
+ * Performs reading from Task File and Calendar File
+ *
+ * Able to determine if loading of file into program is complete
+ * Writes to file in specific format
+ *
+ *  * @author  Tay Jun Wen
+ *  * @version 1.0
+ *  * @since   2018-10-12
+ */
 
 public class FileHelper {
 
@@ -42,10 +58,6 @@ public class FileHelper {
         }
 
         return TaskInFile;
-    }
-
-    public void writeFile(ArrayList<String> lines){
-
     }
 
     public FileWriter Enable_Write_Mode(File textfile) throws IOException
@@ -98,7 +110,7 @@ public class FileHelper {
 
     public static String load_isDone_For_File(String isDoneForFile, ArrayList<task> TaskList, int index)
     {
-        if(isDoneForFile != null) // set the isDone for task loaded from file correctly
+        if(isDoneForFile != null) // set the isDone for taskManager loaded from file correctly
         {
             if(isDoneForFile.equals("Yes"))
                 TaskList.get(index-1).SetAsDone(true);
