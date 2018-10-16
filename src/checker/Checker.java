@@ -19,6 +19,8 @@ import java.util.ArrayList;
 
 public class Checker {
 
+    private inputKeyword key;
+
     public static boolean checkValidIndex(String index, ArrayList<task> TaskList)
     {
         return  Integer.parseInt(index) > 0 && TaskList.size() > 0;
@@ -29,9 +31,9 @@ public class Checker {
      *  Applicable to both functions below
      */
 
-    public static boolean check_keyword(String keyword)
+    public boolean check_keyword(String keyword)
     {
-        inputKeyword key;
+
         try{ key = inputKeyword.valueOf(keyword);}
         catch (Exception e) { return false; };
 
@@ -53,9 +55,9 @@ public class Checker {
         }
     }
 
-    public static boolean CheckValidInput(String keyword)
+    public boolean CheckValidInput(String keyword)
     {
-        inputKeyword key;
+
         try{ key = inputKeyword.valueOf(keyword);}
         catch (Exception e) { return false; };
 
