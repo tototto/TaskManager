@@ -1,7 +1,7 @@
 package main;
 
 import checker.Checker;
-import frontEnd.UserInterface;
+import frontEnd.*;
 import task.task;
 
 import java.text.DateFormat;
@@ -40,7 +40,7 @@ public class NewCalendar
     /***************************************************************************
      *  Given the month, day, and year, of today
      *  Calculate the months 6 months before and after today
-     *  Show to facillitate tracking of task in 1 year
+     *  Show to facillitate tracking of task within 1 year
      ***************************************************************************/
     private int TheYearSixMonthAgo()
     {
@@ -74,6 +74,13 @@ public class NewCalendar
         }
     }
 
+    /**
+     * Display the calendar within a 1 year period.
+     * Dates of task are showned as booked with 'X' denoting such.
+     * @param monthInput the month to display
+     * @param yearInput the year of the month to display
+     * @param TaskList obtain dates of task to highlight in calendar
+     */
     private void DisplayCalendar(int monthInput, int yearInput, ArrayList<task> TaskList)
     {
         int month = monthInput;    // month (Jan = 1, Dec = 12)
@@ -185,6 +192,11 @@ public class NewCalendar
         return false;
     }
 
+    /**
+     * Write the dates user inputted into the task list's task obj
+     * @param taskList contains the  list of task where date will be loaded into
+     * @param input contains the date string to be added to the task
+     */
     public void AddToCalendar(ArrayList<task> taskList, String input) {
         String[] Array = input.split(" ");
 
@@ -208,20 +220,20 @@ public class NewCalendar
                         if(!CheckBeforeAfter(start, end))
                             throw new Exception();
 
-                        if(Array[3].equals("to"))
+                        if(Array[3].equals("to")) {
                             taskToBeUpdated.putDate(Array[2], Array[3], Array[4]); // add it in
+                            UI.printCalendarAdded();
+                        }
                         else
                             throw new Exception();
                     }
                     catch(Exception e)
                     {
-                        UI.printInValidDayError();
+                        errorManager.printInValidDayError();
                     }
 
-                    UI.printCalendarAdded();
-
                 } else
-                    UI.printInValidIndex();
+                    errorManager.printInValidIndex();
 
             }
 
@@ -229,6 +241,12 @@ public class NewCalendar
         catch (NumberFormatException e) {UI.printInValidIndex();;}
     }
 
+    /**
+     * Ensure that date in String represents a valid date format
+     * @param date Accepts a date as String
+     * @return Date format
+     * @throws ParseException when Format mismatch
+     */
     private Date DateValidation(String date) throws ParseException {
             DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
             // Input to be parsed should strictly follow the defined date format
@@ -237,6 +255,12 @@ public class NewCalendar
             return format.parse(date);
     }
 
+    /**
+     * Check that start date does not begin after end
+     * @param start
+     * @param end
+     * @return true if date range is valid, false otherwise
+     */
     private boolean CheckBeforeAfter(Date start, Date end) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         return end.after(start) && start.before(end) || (dateFormat.format(start).equals(dateFormat.format(end)));

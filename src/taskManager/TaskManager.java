@@ -33,22 +33,18 @@ import java.util.ArrayList;
 
 public class TaskManager
 {
-    private Parser parser;
-    private Checker checker;
     private UserInterface UI;
 
     public TaskManager()
     {
-        parser = new Parser();
-        checker = new Checker();
         UI = new UserInterface();
     }
 
     public void AddDeadline(ArrayList<task> taskList, String input) {
         try
         {
-            String desc = parser.returnDescriptionOfDeadline(input);
-            String do_by = parser.returnDoByofDeadline(input);
+            String desc = Parser.returnDescriptionOfDeadline(input);
+            String do_by = Parser.returnDoByofDeadline(input);
             deadline deadlines = new deadline(desc, do_by); // create deadline object
             taskList.add(deadlines); // add deadline object
         }
@@ -91,7 +87,7 @@ public class TaskManager
 
         try
         {
-            if (checker.checkValidIndex(Array[1], taskList))  // a valid index is selected to be updated
+            if (Checker.checkValidIndex(Array[1], taskList))  // a valid index is selected to be updated
             {
                 // grab taskManager to be updated
                 task taskToBeUpdated = null;
@@ -132,8 +128,8 @@ public class TaskManager
     }
 
     private void updateDeadline(String input, String isDone, task taskToBeUpdated) {
-        String desc = parser.returnDescriptionOfDeadline(input);
-        String do_by = parser.returnDoByofDeadline(input);
+        String desc = Parser.returnDescriptionOfDeadline(input);
+        String do_by = Parser.returnDoByofDeadline(input);
         taskToBeUpdated.updateisDone(isDone);
         ((deadline) taskToBeUpdated).updateDo_by(do_by);
         taskToBeUpdated.updateDescription(desc);

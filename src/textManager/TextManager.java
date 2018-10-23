@@ -76,7 +76,11 @@ public class TextManager
         return input.substring(input.lastIndexOf(" ")+1);
     }
 
-
+    /**
+     * Convert An array to a String without the "," as delimiter
+     * @param Array to be converted
+     * @return a converted and natural string
+     */
     private String ArraysToString(String[] Array)
     {
         StringBuilder newString = new StringBuilder("");
@@ -92,6 +96,13 @@ public class TextManager
         return calendar;
     }
 
+    /**
+     * Returns the index of a specific char after Nth occurence of it
+     * @param str String to be checked
+     * @param substr the character you are looking for
+     * @param n refers to after how many occurence
+     * @return  index of the char
+     */
     private  int Finding_Nth_occurrence(String str, String substr, int n) {
         int pos = str.indexOf(substr);
         while (--n > 0 && pos != -1)
@@ -99,12 +110,25 @@ public class TextManager
         return pos;
     }
 
+    /**
+     * returns the description of user input only
+     * @param input raw user input
+     * @return completely parsed string
+     * @throws StringIndexOutOfBoundsException if parsing fails
+     */
     public static String Textparser(String input) throws StringIndexOutOfBoundsException// just to remove the first 2 and return rest
     {
         int indx = input.indexOf(" ", input.indexOf(" ")+1 );
         return input.substring(indx, input.lastIndexOf(" "));
     }
 
+    /**
+     * insert /by into the string to convert it into a deadline statement
+     * @param input raw input string
+     * @param keyword identifies the task at hand
+     * @param indxOfDeadline location of insertion
+     * @return parsed deadline statement
+     */
     private  String ParseWord(String input, String keyword, int indxOfDeadline)
     {
         if(keyword.equals("deadline"))

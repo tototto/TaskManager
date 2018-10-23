@@ -5,31 +5,31 @@ import java.io.IOException;
 
 public class errorManager
 {
-    UserInterface UI;
+    private static UserInterface UI;
 
     public errorManager()
     {
         UI = new UserInterface();
     }
 
-    public void ManageCreateOpenFileError(IOException e)
+    public static void ManageCreateOpenFileError(IOException e)
     {
             UI.printOpenError();
             e.printStackTrace();
     }
 
-    public void ManageReadFileError(FileNotFoundException e)
+    public static void ManageReadFileError(FileNotFoundException e)
     {
         UI.printReadError();
         e.printStackTrace();
     }
 
-    public void ManageWriteError(IOException e)
+    public static void ManageWriteError(IOException e)
     {
         e.printStackTrace();
     }
 
-    public boolean check_empty_string(String input, String keyword)
+    public static boolean check_empty_string(String input, String keyword)
     {
         if(input.length() <= 0 && !keyword.equals("help")) {
             UI.printMissingDescrip();
@@ -37,5 +37,20 @@ public class errorManager
         }
         else
             return false;
+    }
+
+    public static void printCloseError()
+    {
+        UI.printCloseError();
+    }
+
+    public static void printInValidDayError()
+    {
+        UI.printInValidDayError();
+    }
+
+    public static void printInValidIndex()
+    {
+        UI.printInValidIndex();
     }
 }

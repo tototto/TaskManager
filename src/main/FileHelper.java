@@ -1,6 +1,7 @@
 package main;
 
 import frontEnd.UserInterface;
+import frontEnd.errorManager;
 import task.*;
 
 import java.io.File;
@@ -34,6 +35,10 @@ public class FileHelper {
         UI = new UserInterface();
     }
 
+    /**
+     * Create file or open file
+     * @throws IOException if operation fails
+     */
     public void Create_or_Open_File() throws IOException
     {
         File textfile = new File(fileName);
@@ -48,6 +53,11 @@ public class FileHelper {
         this.theFile = textfile;
     }
 
+    /**
+     * Extract data from text file
+     * @return all task in file
+     * @throws FileNotFoundException if file reading fails
+     */
     public ArrayList<String> readFile() throws FileNotFoundException {
 
         Scanner s = new Scanner(theFile); // create a Scanner using the File as the source
@@ -60,12 +70,24 @@ public class FileHelper {
         return TaskInFile;
     }
 
+    /**
+     *
+     * @param textfile to be read from
+     * @return return object that allows for file writing operation to be performed
+     * @throws IOException if file cannot be opened for writing
+     */
     public FileWriter Enable_Write_Mode(File textfile) throws IOException
     {
         FileWriter fw = new FileWriter(textfile);
         return fw;
     }
 
+    /**
+     * Write to file in specific format according to the type of task
+     * and close file
+     * @param TaskList data to be written to file
+     * @throws IOException if write operation fails
+     */
     public void Write_to_File(ArrayList<task> TaskList) throws IOException
     {
         // OPEN FILE IN WRITE MODE
@@ -101,7 +123,7 @@ public class FileHelper {
         }
         catch (IOException e)
         {
-            UI.printCloseError();
+            errorManager.printCloseError();
             e.printStackTrace();
         }
 

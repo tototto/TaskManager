@@ -9,7 +9,7 @@ public class UserInterface
 {
     private Scanner GetString; // define Scanner object
 
-    private  final String SYSTEM_PROMPT = "Your taskManager?";
+    private  final String SYSTEM_PROMPT = "Your task?";
     private  final String MESSAGE_ADDED = "Welcome to TaskManager-Level1!";
     private  final String PRINT_TASK_LIST = "Tasks in the list: ";
     private  final String ERROR_ON_OPEN_CREATE = "Error: Cannot create or open file";
@@ -59,6 +59,7 @@ public class UserInterface
         System.out.println("How to update TODO: UPDATE [IDX] [DESCRIPTION] [DONE_STATUS] ");
         System.out.println("How to remove an existing date: REMOVE [IDX]");
         System.out.println("How to search list by Task type: SEARCH [TODO OR DEADLINE]");
+        System.out.println("How to view calendar: view");
     }
 
     public void printInValidDayError()
