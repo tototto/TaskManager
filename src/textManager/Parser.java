@@ -48,7 +48,6 @@ public class Parser {
         int Index = input.indexOf("/by"); // calculate where the do_by keyword starts in input
         String do_by = input.substring(Index, input.length()); // returns the unformatted do_by segment of user input
         do_by = returnTaskDescription(do_by).trim(); // Format the do_by segment of user input
-
         return do_by;
     }
 
@@ -62,7 +61,6 @@ public class Parser {
         int StartPoint = input.indexOf(" "); // pick out index where keyword "add" ends
         StartPoint = StartPoint < 0 ? input.length() : StartPoint;
         input = input.substring(StartPoint, input.length()); // remove the add from user input
-
         return input;
     }
 }

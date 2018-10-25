@@ -41,6 +41,8 @@ public class FileHelper {
      */
     public void Create_or_Open_File() throws IOException
     {
+        assert !fileName.isEmpty(): "Missing filename";
+
         File textfile = new File(fileName);
         UI.printOpenMsg(fileName);
 
@@ -59,6 +61,8 @@ public class FileHelper {
      * @throws FileNotFoundException if file reading fails
      */
     public ArrayList<String> readFile() throws FileNotFoundException {
+
+        assert !fileName.isEmpty(): "Missing filename";
 
         Scanner s = new Scanner(theFile); // create a Scanner using the File as the source
         ArrayList<String> TaskInFile = new ArrayList<String>();
@@ -91,6 +95,7 @@ public class FileHelper {
     public void Write_to_File(ArrayList<task> TaskList) throws IOException
     {
         // OPEN FILE IN WRITE MODE
+        assert theFile.exists(): "Missing file";
         FileWriter fw = Enable_Write_Mode(theFile);
 
         // PERFORM WRITING
@@ -146,6 +151,7 @@ public class FileHelper {
 
     public void Write_to_Calendar(ArrayList<task> taskList) throws IOException {
         // OPEN FILE IN WRITE MODE
+        assert theFile.exists(): "Missing file";
         FileWriter fw = Enable_Write_Mode(theFile);
 
         // PERFORM WRITING
@@ -165,5 +171,22 @@ public class FileHelper {
     public static boolean FinishLoadFromFileStatus(int index, ArrayList<String> TaskFromFile) // return true if not finish loading from file
     {
         return index < TaskFromFile.size();
+    }
+
+    public boolean writeToHardDisk(FileHelper theFile, FileHelper theCalendar, ArrayList<task> TaskList) {
+        boolean SucessStatus = true;
+
+        try {
+            theFile.Write_to_File(TaskList); // determine if write is sucessful
+            theCalendar.Write_to_Calendar(TaskList); // determine if write is sucessful
+        }catch (IOException e) {
+            SucessStatus = false;
+            errorManager.ManageWriteError(e);
+        }
+
+        if(SucessStatus == false) {
+            return true;
+        } //exit main if write to file fail
+        return false;
     }
 }

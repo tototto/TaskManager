@@ -17,8 +17,7 @@ import java.util.ArrayList;
  * This can be classified as the main body.
  */
 
-public class Engine
-{
+public class Engine {
     /**
      * The Other classes used in the operation of TaskManager core logic
      */
@@ -44,8 +43,7 @@ public class Engine
      * Also Loads from file and calendar before program runs
      * When program runs data is fully loaded
      */
-    public Engine()
-    {
+    public Engine() {
         taskmanager = new TaskManager();
         theFile = new FileHelper("tasklist.txt");
         theCalendar = new FileHelper("calendar.txt");
@@ -68,6 +66,7 @@ public class Engine
             TaskFromFile = theFile.readFile();
             CalendarList = theCalendar.readFile();
         } catch (FileNotFoundException e) { errorManager.ManageReadFileError(e);}
+
     }
 
     /**
@@ -75,37 +74,34 @@ public class Engine
      * Enables the storing of user input Task into program memory
      * provides provision for the different operation that can be performed using other classes
      */
-    public void run()
-    {
+    public void run() {
         UI.printMessageAdded();
 
         boolean runner = true; // To determine if program should continue
 
-        while(runner)
-        {
+        while(runner) {
             String input = null;
             String keyword = null;
             // loop through the TaskFromFile first, the variable 'input' and 'keyword' will hold everything from TaskFromFile
             // use int index to track which row from file you are currently reading from and when to stop
-            if(theFile.FinishLoadFromFileStatus(index, TaskFromFile)) // not finish loading from file (tasklist.txt)
-            {
+            // if not finish loading from file (tasklist.txt)
+            if(theFile.FinishLoadFromFileStatus(index, TaskFromFile)) {
+
                 TextManager textManager = new TextManager(TaskFromFile, index);
                 textManager.LoadText();
-
                 input = textManager.getInput();
                 keyword = textManager.getKeyword();
                 isDoneForFile = textManager.getIsDoneForFile();
                 index++;
+
             }
-            else if(theFile.FinishLoadFromFileStatus(indexForCalendar, CalendarList))
-            {
+            else if(theFile.FinishLoadFromFileStatus(indexForCalendar, CalendarList)) {
                 TextManager textManager = new TextManager(CalendarList, indexForCalendar, "calendar");
                 input = textManager.getCalendarInput();
                 keyword = Parser.SelectKeyword(input).toLowerCase().trim(); // grab keyword
                 indexForCalendar++;
             }
-            else
-            {
+            else {
                 // after it is finished execute this block:
                 UI.printSystemPrompt();
                 input = UI.getUserInput(); // obtain next line from user through scanner object and remove trailing spaces
@@ -113,55 +109,48 @@ public class Engine
 
             }
 
-            if( Checker.CheckValidInput(keyword) ) // check if user gave a valid command
-            {
-                if(Checker.check_keyword(keyword) ) //check if user gave an Action keyword
-                {
+            // input and keyword cannot possibly be null at this point
+            assert input != null : "input variable not used";
+            assert keyword != null : "keyword variable not used";
+
+            // GUARD CLAUSE
+            if(keyword.equals("print") ){ //check if user gave a passive keyword "print"
+                UI.printOut(TaskList);
+            }
+            else if(keyword.equals("exit")) {//check if user gave a passive keyword "exit"
+                UI.printExit();
+                break;
+            }
+            else if(keyword.equals("view")) {
+                calendar.GenerateCalendar(TaskList);
+            }
+
+            if( Checker.CheckValidInput(keyword) ){ // check if user gave a valid command
+
+                if(Checker.check_keyword(keyword) ){ //check if user gave an Action keyword
+
                     input = Parser.returnTaskDescription(input); // parse out description
 
                     if (taskmanager.ExecuteTaskCommand(TaskList, input, keyword)) continue;
 
                     // perform file writing operation
                     isDoneForFile = theFile.load_isDone_For_File(isDoneForFile, TaskList, index);
-
                     UI.printPrintTaskList(TaskList.size());
 
-                    if(!theFile.FinishLoadFromFileStatus(index, TaskFromFile)) // if finish loading from file
-                    {
-                        int SucessStatus = 0;
-
-                        try {
-                            theFile.Write_to_File(TaskList); // determine if write is sucessful
-                            theCalendar.Write_to_Calendar(TaskList); // determine if write is sucessful
-                        }catch (IOException e) {
-                            SucessStatus = 1;
-                            errorManager.ManageWriteError(e);
-                        }
-
-                        if(SucessStatus == 1) { return; } //exit main if write to file fail
+                    if(!theFile.FinishLoadFromFileStatus(index, TaskFromFile)){ // if finish loading from file
+                        if (theFile.writeToHardDisk(theFile, theCalendar, TaskList)) return;
                     }
-                    // end of file writting operation
+
                 }
-                else if(keyword.equals("print") ) //check if user gave a passive keyword "print"
-                {
-                    UI.printOut(TaskList);
-                }
-                else if(keyword.equals("exit")) //check if user gave a passive keyword "exit"
-                {
-                    UI.printExit();
-                    break;
-                }
-                else if(keyword.equals("view"))
-                {
-                    calendar.GenerateCalendar(TaskList);
-                }
+
             }
-            else
-            {
+            else {
                 UI.printError();
             }
         }
     }
+
+
 
 
 }

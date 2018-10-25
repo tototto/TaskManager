@@ -47,8 +47,7 @@ public class UserInterface
         System.out.println(fileName + "not found. Creating one in directory now.");
     }
 
-    public void printHelp()
-    {
+    public void printHelp() {
         System.out.println("How to add TODO taskManager: TODO [DESCRIPTION.....]");
         System.out.println("How to add DEADLINE taskManager: DEADLINE [DESCRIPTION...../by .......]");
         System.out.println("How to set existing taskManager to Done: DONE [INDX]");
@@ -133,21 +132,18 @@ public class UserInterface
         }
     }
 
-    public void PrintDetails(task obj, int i)
-    {
+    public void PrintDetails(task obj, int i) {
         System.out.printf("[%d] description: %s \n", i + 1, obj.getDesciption().trim());
         System.out.println("\tis done? " + obj.getDone());
 
-        if(obj instanceof deadline) // if we are printing deadline class
-        {
+        if(obj instanceof deadline) { // if we are printing deadline class
             if(obj.getDo_by().length() > 0)
                 System.out.println("\tDo by: " + obj.getDo_by());
             else
                 System.out.println("\tDo by: " + NO_DEADLINE);
         }
 
-        if(obj.checkDateNULL())
-        {
+        if(obj.checkDateNULL()) {
             System.out.println("\tCalendar: " + obj.getDate());
         }
     }
@@ -170,6 +166,12 @@ public class UserInterface
     public void printNoMatch()
     {
         System.out.println("There is no Task of the specified type");
+    }
+
+    public void printUpdateError(){
+        System.out.println("Please list a valid index to update, make sure description is not blank");
+        System.out.println("How to update DEADLINE: [UPDATE] [IDX] [DESCRIPTION] /BY [DEADLINE] [DONE_STATUS] ");
+        System.out.println("How to update TODO: [UPDATE] [IDX] [DESCRIPTION] [DONE_STATUS] ");
     }
 
 }

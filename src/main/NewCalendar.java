@@ -29,8 +29,19 @@ public class NewCalendar
     private int CurrentMonth;
     private UserInterface UI;
 
-    public NewCalendar()
-    {
+    private final int FEBURARY = 2;
+    private final int LEAP_YEAR = 29;
+    private final int START = 0;
+    private final int END = 2;
+    private final int INDX = 1;
+    private final int CALANDAR_START = 2;
+    private final int CALANDAR_END = 4;
+    private final int JOINER = 3;
+    private final int START_DAY = 1;
+    private final int MAX_DAY = 31;
+    private final int TOTAL_WEEK_DAY = 7;
+
+    public NewCalendar() {
         calendar = Calendar.getInstance(); // create calendar obj
         CurrentYear = calendar.get(calendar.YEAR);
         CurrentMonth = calendar.get(calendar.MONTH); // give you current month - 1
@@ -42,8 +53,7 @@ public class NewCalendar
      *  Calculate the months 6 months before and after today
      *  Show to facillitate tracking of task within 1 year
      ***************************************************************************/
-    private int TheYearSixMonthAgo()
-    {
+    private int TheYearSixMonthAgo() {
         int SixMonthBefore = TheMonthSixMonthsAgo();
 
         if(SixMonthBefore > CurrentMonth)
@@ -57,8 +67,11 @@ public class NewCalendar
         return ((CurrentMonth - 6) % 12) ;
     }
 
-    public void GenerateCalendar(ArrayList<task> TaskList)
-    {
+    /**
+     *  Generate calendar from the list of task
+     * @param TaskList contains calendar details for each task
+     */
+    public void GenerateCalendar(ArrayList<task> TaskList) {
         UI.printGenerateCalendar();
 
         int year = TheYearSixMonthAgo();
@@ -66,8 +79,7 @@ public class NewCalendar
 
         System.out.println();
 
-        for(int i = 0; i < 12; i++)
-        {
+        for(int i = 0; i < 12; i++) {
             DisplayCalendar(month+1, year, TaskList);
             month = (++month) % 12;
             if(month == 0) year++;
@@ -81,8 +93,8 @@ public class NewCalendar
      * @param yearInput the year of the month to display
      * @param TaskList obtain dates of task to highlight in calendar
      */
-    private void DisplayCalendar(int monthInput, int yearInput, ArrayList<task> TaskList)
-    {
+    private void DisplayCalendar(int monthInput, int yearInput, ArrayList<task> TaskList) {
+
         int month = monthInput;    // month (Jan = 1, Dec = 12)
         int year = yearInput;     // year
 
@@ -99,28 +111,30 @@ public class NewCalendar
         int[] days = { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
         // check for leap year
-        if (month == 2 && isLeapYear(year)) days[month] = 29;
-
+        if (month == FEBURARY && isLeapYear(year)) days[month] = LEAP_YEAR;
 
         // print calendar header
         System.out.println("   " + months[month] + " " + year);
         System.out.println(" S  M Tu  W Th  F  S");
 
         // starting day
-        int d = day(month, 1, year);
+        int d = day(month, START_DAY, year);
+        assert d < TOTAL_WEEK_DAY : "Calendar starting date calculation error";
 
         // print the calendar
         for (int i = 0; i < d; i++)
             System.out.print("   ");
 
-        for (int i = 1; i <= days[month]; i++) // i is the individual date of the month
-        {
+        for (int i = START_DAY; i <= days[month]; i++) {// i is the individual date of the month
+
+            assert i <= MAX_DAY : "There is more than 31 days in a month. date logic error";
+
             if(DateIsBooked(i,month,year, TaskList))
                 UI.printBookedDay();
             else
                 UI.printDay(i);
 
-            if (((i + d) % 7 == 0) || (i == days[month]))
+            if (((i + d) % TOTAL_WEEK_DAY == 0) || (i == days[month]))
                 System.out.println();
         }
 
@@ -132,8 +146,8 @@ public class NewCalendar
      *  Given the month, day, and year, return if day is booked
      ***************************************************************************/
 
-    private boolean DateIsBooked(int day, int month, int year, ArrayList<task> taskList)
-    {
+    private boolean DateIsBooked(int day, int month, int year, ArrayList<task> taskList) {
+
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         boolean AnyoneMatches = false;
 
@@ -147,8 +161,8 @@ public class NewCalendar
                     continue;
 
                 String[] Array = TaskDate.split(" ");
-                String StartDate = Array[0];
-                String EndDate = Array[2];
+                String StartDate = Array[START];
+                String EndDate = Array[END];
 
                 Date Start = dateFormat.parse(StartDate);
                 Date End = dateFormat.parse(EndDate);
@@ -157,7 +171,9 @@ public class NewCalendar
                     AnyoneMatches = isWithinRange(Start, End, DateToCheck, dateFormat);
 
             }
-        } catch (Exception e) { }
+        } catch (Exception e) {
+            //silently handle error. Avoid printing to console else will disrupt calendar UI.
+        }
 
         if(AnyoneMatches)
             return true;
@@ -199,29 +215,28 @@ public class NewCalendar
      */
     public void AddToCalendar(ArrayList<task> taskList, String input) {
         String[] Array = input.split(" ");
-
         Checker checker = new Checker();
 
         try {
-            if (checker.checkValidIndex(Array[1], taskList)) {
+            if (checker.checkValidIndex(Array[INDX], taskList)) {
                 // grab taskManager to be updated
                 task taskToBeUpdated = null;
 
-                if (Integer.parseInt(Array[1]) - 1 < Array.length) {
-                    taskToBeUpdated = taskList.get(Integer.parseInt(Array[1]) - 1);
+                if (Integer.parseInt(Array[INDX]) - 1 < Array.length) {
+                    taskToBeUpdated = taskList.get(Integer.parseInt(Array[INDX]) - 1);
                     DateFormat df = new SimpleDateFormat("dd/mm/yyyy");
 
-                    try
-                    {
+                    try {
                         // check if it is in date format
-                        Date start = DateValidation(Array[2]);
-                        Date end = DateValidation(Array[4]);
+                        Date start = DateValidation(Array[CALANDAR_START]);
+                        Date end = DateValidation(Array[CALANDAR_END]);
 
                         if(!CheckBeforeAfter(start, end))
                             throw new Exception();
 
-                        if(Array[3].equals("to")) {
-                            taskToBeUpdated.putDate(Array[2], Array[3], Array[4]); // add it in
+                        if(Array[JOINER].equals("to")) {
+                            taskToBeUpdated.putDate(Array[CALANDAR_START], Array[JOINER], Array[CALANDAR_END]); // add it in
+                            assert !taskToBeUpdated.getDate().isEmpty() : "Add to calendar failed";
                             UI.printCalendarAdded();
                         }
                         else
@@ -244,7 +259,7 @@ public class NewCalendar
     /**
      * Ensure that date in String represents a valid date format
      * @param date Accepts a date as String
-     * @return Date format
+     * @return Date in given format
      * @throws ParseException when Format mismatch
      */
     private Date DateValidation(String date) throws ParseException {

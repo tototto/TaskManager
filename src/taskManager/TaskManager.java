@@ -46,11 +46,13 @@ public class TaskManager
             String desc = Parser.returnDescriptionOfDeadline(input);
             String do_by = Parser.returnDoByofDeadline(input);
             deadline deadlines = new deadline(desc, do_by); // create deadline object
+            assert desc != null : "missing description for deadline";
+            assert do_by != null : "missing description for deadline";
             taskList.add(deadlines); // add deadline object
         }
         catch (StringIndexOutOfBoundsException e)
         {
-            System.out.println("Enter a valid Deadline taskManager ");
+            System.out.println("Enter a valid Deadline task  ");
         }
     }
 
@@ -61,11 +63,13 @@ public class TaskManager
     public void setToDone(ArrayList<task> taskList, String input) {
         int Doneindex = Integer.parseInt(input.trim()) - 1;
         taskList.get(Doneindex).SetAsDone(true);
+        assert taskList.get(Doneindex).getDone() == "Yes" : "operation: set to done for current task failed";
     }
 
     public void removeDate(ArrayList<task> taskList, String input) {
         int Taskindex = Integer.parseInt(input.trim()) - 1;
         taskList.get(Taskindex).setDateToNULL();
+        assert taskList.get(Taskindex).getDate() == null : "operation: remove date for current task failed";
     }
 
     public void deleteTask(ArrayList<task> taskList, String input) {
@@ -82,6 +86,11 @@ public class TaskManager
         }catch (IndexOutOfBoundsException e) { UI.printInValidIndex();}
     }
 
+    /**
+     * update the existing task in program as per user input
+     * @param taskList task specified will be extracted from the list of task
+     * @param input the new data to be updated into the task in taskList. contains info on which task to update.
+     */
     public void updater(ArrayList<task> taskList, String input) {
         String[] Array = input.split(" ");
 
@@ -94,6 +103,7 @@ public class TaskManager
 
                 if (Integer.parseInt(Array[1]) - 1 < Array.length) {
                     taskToBeUpdated = taskList.get(Integer.parseInt(Array[1]) - 1);
+                    assert taskToBeUpdated != null : "Task to be updated is missing. Could be an invalid index";
                     // get details for update
                     input = TextManager.Textparser(input);
                 } else {
@@ -106,11 +116,8 @@ public class TaskManager
                 System.out.println("Updated index " + Integer.parseInt(Array[1]));
             }
 
-        }catch (Exception e) // catch if user did not enter a valid index
-        {
-            System.out.println("Please list a valid index to update, make sure description is not blank");
-            System.out.println("How to update DEADLINE: [UPDATE] [IDX] [DESCRIPTION] /BY [DEADLINE] [DONE_STATUS] ");
-            System.out.println("How to update TODO: [UPDATE] [IDX] [DESCRIPTION] [DONE_STATUS] ");
+        }catch (Exception e){ // catch if user did not enter a valid index
+                UI.printUpdateError();
         }
     }
 
@@ -146,69 +153,54 @@ public class TaskManager
         if( ErrManager.check_empty_string(input, keyword)) {
             return true;
         }
-        ; // if description is empty
 
-        if(keyword.equals("update"))
-        {
+        if(keyword.equals("update")) {
             updater(taskList, input);
         }
-        else if(keyword.equals("todo"))
-        {
+        else if(keyword.equals("todo")) {
             AddTodo(taskList, input);
         }
-        else if( keyword.equals("deadline") )
-        {
+        else if( keyword.equals("deadline") ) {
             AddDeadline(taskList, input);
         }
-        else if(keyword.equals("done") )
-        {
+        else if(keyword.equals("done") ) {
             setToDone(taskList, input);
         }
-        else if(keyword.equals("delete"))
-        {
+        else if(keyword.equals("delete")) {
             deleteTask(taskList, input);
         }
-        else if(keyword.equals("add")) // add dates to calendar
-        {
+        else if(keyword.equals("add")) { // add dates to calendar
             calendar.AddToCalendar(taskList, input);
         }
-        else if(keyword.equals("remove"))
-        {
+        else if(keyword.equals("remove")) {
             removeDate(taskList, input);
         }
-        else if(keyword.equals("search"))
-        {
+        else if(keyword.equals("search")) {
             SearchTaskByType(taskList, input);
         }
-        else if(keyword.equals("help"))
-        {
+        else if(keyword.equals("help")) {
             UI.printHelp();
         }
 
         return false;
     }
 
-    private void SearchTaskByType(ArrayList<task> taskList, String input)
-    {
-        String type = input.trim();
+    private void SearchTaskByType(ArrayList<task> taskList, String input) {
+                String type = input.trim();
                 deadline Deadline = new deadline("sample", "sample"); // create sample deadline obj
                 todo TODO = new todo("sample");// create sample todo obj
                 int indx = 0;
                 boolean isEmpty = true;
 
-                for(task x : taskList)
-                {
-                    if(type.equals("deadline") && x.getClass() == Deadline.getClass())
-                    {
+                for(task x : taskList) {
+                    if(type.equals("deadline") && x.getClass() == Deadline.getClass()) {
                         UI.PrintDetails(x, indx);
                         isEmpty = false;
                     }
-                    else if(type.equals("todo") && x.getClass() == TODO.getClass())
-                    {
+                    else if(type.equals("todo") && x.getClass() == TODO.getClass()) {
                         UI.PrintDetails(x, indx);
                         isEmpty = false;
                     }
-
                     indx++;
                 }
 

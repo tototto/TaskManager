@@ -23,21 +23,18 @@ public class TextManager
    private  String isDoneForFile;
    private  String calendar;
 
-   public TextManager(ArrayList<String> TaskFromFile, int index)
-   {
+   public TextManager(ArrayList<String> TaskFromFile, int index) {
        input = TaskFromFile.get(index); // grab data sentence from array taken from file
        keyword = SelectKeywordFromFile(input).toLowerCase().trim(); // grab keyword from each sentence
        isDoneForFile = grabIsDone(input);// grab isDone details
    }
 
-   public TextManager(ArrayList<String> CalendarFromFile, int index, String Calendar)
-   {
+   public TextManager(ArrayList<String> CalendarFromFile, int index, String Calendar) {
        input = CalendarFromFile.get(index);
    }
 
 
-   public String getInput()
-   {
+   public String getInput() {
        return input;
        //return input.substring(0, input.lastIndexOf(" "));
    }
@@ -57,15 +54,13 @@ public class TextManager
        return isDoneForFile;
    }
 
-   public void LoadText()
-   {
+   public void LoadText() {
        int indxOfDeadline = Finding_Nth_occurrence(input, "|", 3);
        input = ParseWord(input, keyword, indxOfDeadline); // check if the taskManager is a Deadline taskManager and format it accordingly
        input = ConvertToNormal(input).trim(); // convert to a normal string
    }
 
-    public String SelectKeywordFromFile(String input)
-    {
+    public String SelectKeywordFromFile(String input) {
         String[] array = input.split("\\|"); // split user input into array
         String keyword = array[1]; // grab keyword
         return keyword;
@@ -81,8 +76,7 @@ public class TextManager
      * @param Array to be converted
      * @return a converted and natural string
      */
-    private String ArraysToString(String[] Array)
-    {
+    private String ArraysToString(String[] Array) {
         StringBuilder newString = new StringBuilder("");
 
         for(String x : Array)
@@ -116,8 +110,7 @@ public class TextManager
      * @return completely parsed string
      * @throws StringIndexOutOfBoundsException if parsing fails
      */
-    public static String Textparser(String input) throws StringIndexOutOfBoundsException// just to remove the first 2 and return rest
-    {
+    public static String Textparser(String input) throws StringIndexOutOfBoundsException {// just to remove the first 2 and return rest
         int indx = input.indexOf(" ", input.indexOf(" ")+1 );
         return input.substring(indx, input.lastIndexOf(" "));
     }
@@ -129,20 +122,17 @@ public class TextManager
      * @param indxOfDeadline location of insertion
      * @return parsed deadline statement
      */
-    private  String ParseWord(String input, String keyword, int indxOfDeadline)
-    {
-        if(keyword.equals("deadline"))
-        {
+    private  String ParseWord(String input, String keyword, int indxOfDeadline) {
+        if(keyword.equals("deadline")) {
             StringBuffer sb = new StringBuffer(input);
             sb.insert(indxOfDeadline, " /by ");
             input = sb.toString();
         }
-
         return input;
     }
 
-    public String ConvertToNormal(String input)  // convert input string seperated by | delimeter into string seperated by ' ' spaces
-    {
+    public String ConvertToNormal(String input){  // convert input string seperated by | delimeter into string seperated by ' ' spaces
+
         String[] Array = input.split("\\|");
 
         input = ArraysToString(Array);
