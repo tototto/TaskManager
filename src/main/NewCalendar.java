@@ -242,8 +242,7 @@ public class NewCalendar
                         else
                             throw new Exception();
                     }
-                    catch(Exception e)
-                    {
+                    catch(Exception e) {
                         errorManager.printInValidDayError();
                     }
 

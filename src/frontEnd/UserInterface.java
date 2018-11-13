@@ -48,9 +48,9 @@ public class UserInterface
     }
 
     public void printHelp() {
-        System.out.println("How to add TODO taskManager: TODO [DESCRIPTION.....]");
-        System.out.println("How to add DEADLINE taskManager: DEADLINE [DESCRIPTION...../by .......]");
-        System.out.println("How to set existing taskManager to Done: DONE [INDX]");
+        System.out.println("How to add TODO task: TODO [DESCRIPTION.....]");
+        System.out.println("How to add DEADLINE task: DEADLINE [DESCRIPTION...../by .......]");
+        System.out.println("How to set existing task to Done: DONE [INDX]");
         System.out.println("How to delete a specific Task by it's index: DELETE [INDX]");
         System.out.println("How to delete all Task: DELETE all");
         System.out.println("How to add/update a specific Task by it's index to the calendar: ADD [INDX] [DATE 1] to [DATE 2]");

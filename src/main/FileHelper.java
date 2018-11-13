@@ -28,30 +28,28 @@ public class FileHelper {
 
     private String fileName;
     private File theFile;
-    private UserInterface UI;
+
 
     public FileHelper(String fileName) {
         this.fileName = fileName;
-        UI = new UserInterface();
+
     }
 
     /**
      * Create file or open file
      * @throws IOException if operation fails
      */
-    public void Create_or_Open_File() throws IOException
-    {
+    public void Create_or_Open_File() throws IOException {
         assert !fileName.isEmpty(): "Missing filename";
 
         File textfile = new File(fileName);
+        UserInterface UI = new UserInterface();
         UI.printOpenMsg(fileName);
 
-        if(!textfile.exists())
-        {
+        if(!textfile.exists()) {
             System.out.println();
             textfile.createNewFile();
         }
-
         this.theFile = textfile;
     }
 
@@ -63,14 +61,12 @@ public class FileHelper {
     public ArrayList<String> readFile() throws FileNotFoundException {
 
         assert !fileName.isEmpty(): "Missing filename";
-
         Scanner s = new Scanner(theFile); // create a Scanner using the File as the source
         ArrayList<String> TaskInFile = new ArrayList<String>();
 
         while (s.hasNext()) {
             TaskInFile.add(s.nextLine());
         }
-
         return TaskInFile;
     }
 
@@ -80,8 +76,7 @@ public class FileHelper {
      * @return return object that allows for file writing operation to be performed
      * @throws IOException if file cannot be opened for writing
      */
-    public FileWriter Enable_Write_Mode(File textfile) throws IOException
-    {
+    public FileWriter Enable_Write_Mode(File textfile) throws IOException {
         FileWriter fw = new FileWriter(textfile);
         return fw;
     }
@@ -92,42 +87,33 @@ public class FileHelper {
      * @param TaskList data to be written to file
      * @throws IOException if write operation fails
      */
-    public void Write_to_File(ArrayList<task> TaskList) throws IOException
-    {
+    public void Write_to_File(ArrayList<task> TaskList) throws IOException {
         // OPEN FILE IN WRITE MODE
         assert theFile.exists(): "Missing file";
         FileWriter fw = Enable_Write_Mode(theFile);
 
         // PERFORM WRITING
-        for(int i = 0; i < TaskList.size(); i++)
-        {
+        for(int i = 0; i < TaskList.size(); i++) {
             task obj = TaskList.get(i);
 
-            if(obj instanceof deadline)
-            {
+            if(obj instanceof deadline) {
                 fw.write("[" + (i + 1) + "] | " + obj.getClass().getSimpleName() + " | " + obj.getDesciption().trim() + " | " + obj.getDo_by() + " | " + obj.getDone() );
                 fw.write( System.lineSeparator());
             }
-            else
-            {
+            else {
                 fw.write("[" + (i + 1) + "] | " + obj.getClass().getSimpleName() + " | " + obj.getDesciption().trim() + " | " + obj.getDone());
                 fw.write( System.lineSeparator());
             }
 
         }
-
         closeFile(fw);
-
     }
 
-    public void closeFile(FileWriter fw)
-    {
-        try
-        {
+    public void closeFile(FileWriter fw) {
+        try {
             fw.close();
         }
-        catch (IOException e)
-        {
+        catch (IOException e) {
             errorManager.printCloseError();
             e.printStackTrace();
         }
@@ -135,19 +121,16 @@ public class FileHelper {
         theFile = new File(fileName);
     }
 
-    public static String load_isDone_For_File(String isDoneForFile, ArrayList<task> TaskList, int index)
-    {
-        if(isDoneForFile != null) // set the isDone for taskManager loaded from file correctly
-        {
+    public static String load_isDone_For_File(String isDoneForFile, ArrayList<task> TaskList, int index) {
+        if(isDoneForFile != null){ // set the isDone for taskManager loaded from file correctly
+
             if(isDoneForFile.equals("Yes"))
                 TaskList.get(index-1).SetAsDone(true);
 
             isDoneForFile = null;
         }
-
         return isDoneForFile;
     }
-
 
     public void Write_to_Calendar(ArrayList<task> taskList) throws IOException {
         // OPEN FILE IN WRITE MODE
@@ -155,8 +138,7 @@ public class FileHelper {
         FileWriter fw = Enable_Write_Mode(theFile);
 
         // PERFORM WRITING
-        for(int i = 0; i < taskList.size(); i++)
-        {
+        for(int i = 0; i < taskList.size(); i++) {
             task obj = taskList.get(i);
 
             if(obj.checkDateNULL()) {
@@ -164,12 +146,10 @@ public class FileHelper {
                 fw.write(System.lineSeparator());
             }
         }
-
         closeFile(fw);
     }
 
-    public static boolean FinishLoadFromFileStatus(int index, ArrayList<String> TaskFromFile) // return true if not finish loading from file
-    {
+    public static boolean FinishLoadFromFileStatus(int index, ArrayList<String> TaskFromFile){ // return true if not finish loading from file
         return index < TaskFromFile.size();
     }
 

@@ -12,23 +12,23 @@ import java.util.ArrayList;
 
 /**
  * <h1>Task Manager</h1>
- * Contains Operation to interact with program
- * current list of task
- *
- * Allows for features of TaskManager CLI to operate
- * 1. Perform Adding of task
- * 2. Perform removal of task
- * 3. Perform Searching of task
- * 4. Perform Update of task - allows different type of update
- * 5. Display user aid text manual
- *
- * Contains set of core logic for which operation to be used
- * according to different user instructions
- * <p>
- *
- * @author  Tay Jun Wen
- * @version 1.0
- * @since   2018-10-12
+ *  * Contains Operation to interact with program
+ *  * current list of task
+ *  *
+ *  * Allows for features of TaskManager CLI to operate
+ *  * 1. Perform Adding of task
+ *  * 2. Perform removal of task
+ *  * 3. Perform Searching of task
+ *  * 4. Perform Update of task - allows different type of update
+ *  * 5. Display user aid text manual
+ *  *
+ *  * Contains set of core logic for which operation to be used
+ *  * according to different user instructions
+ *  * <p>
+ *  *
+ *  * @author  Tay Jun Wen
+ *  * @version 1.0
+ *  * @since   2018-10-12
  */
 
 public class TaskManager
@@ -101,7 +101,7 @@ public class TaskManager
                 // grab taskManager to be updated
                 task taskToBeUpdated = null;
 
-                if (Integer.parseInt(Array[1]) - 1 < Array.length) {
+                if (Integer.parseInt(Array[1]) - 1 < taskList.size()) {
                     taskToBeUpdated = taskList.get(Integer.parseInt(Array[1]) - 1);
                     assert taskToBeUpdated != null : "Task to be updated is missing. Could be an invalid index";
                     // get details for update
@@ -153,6 +153,10 @@ public class TaskManager
         if( ErrManager.check_empty_string(input, keyword)) {
             return true;
         }
+
+        // Task and keyword CANNOT be empty at this point
+        assert !input.isEmpty() : "Input is empty";
+        assert !keyword.isEmpty() : "Keyword is empty";
 
         if(keyword.equals("update")) {
             updater(taskList, input);

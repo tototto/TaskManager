@@ -60,7 +60,6 @@ public class Engine {
         }catch(IOException e){errorManager.ManageCreateOpenFileError(e);}
 
         //  Read from File and store file result as string in TaskFromFile
-
         /** @throws e if file cannot be read */
         try {
             TaskFromFile = theFile.readFile();
@@ -140,7 +139,6 @@ public class Engine {
                     if(!theFile.FinishLoadFromFileStatus(index, TaskFromFile)){ // if finish loading from file
                         if (theFile.writeToHardDisk(theFile, theCalendar, TaskList)) return;
                     }
-
                 }
 
             }
@@ -149,8 +147,5 @@ public class Engine {
             }
         }
     }
-
-
-
 
 }
